@@ -7,6 +7,8 @@ namespace classes
         Point = 2,
         Crate = 3,
         Hole = 4,
-        Arrow = 5
+        Arrow = 5,
+        Character = 6,
+        Wall = 7,
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using classes;
@@ -6,143 +7,182 @@ using UnityEngine.UI;
 
 public class GridManager : MonoBehaviour
 {
-    #region Members
-
-    [Header("Grid Setup")]
-    //number of tile in grid (width & height)
-    [SerializeField] private Vector2 gridDimensions;
-
-    //Tiles for ground
-    [SerializeField] private List<GameObject> ground;
-
-    [Space(10)]
-    
-    [Header("Victory Setup")] [SerializeField]
-    private List<Vector2> winPointsCoordonates;
-
-    [SerializeField] private GameObject winPointsPrefab;
-    
-    [Space(10)]
-    
-    [Header("Brick Setup")] [SerializeField]
-    private List<Vector2> brickCoordinates;
-
-
-    #endregion
-
-    private int gridHeight = 10;
-    private int gridWidth = 10;
+    public static GridManager Instance { get; private set; }
+    private Vector2Int gridSize = new Vector2Int(10, 10);
 
     [SerializeField] private GameObject groundPrefab; // 1
     [SerializeField] private GameObject pointPrefab; // 2
     [SerializeField] private GameObject cratePrefab; // 3
     [SerializeField] private GameObject holePrefab; //4
     [SerializeField] private GameObject arrowPrefab; //5
-    [SerializeField] private GameObject characterPrefab;
+    [SerializeField] private GameObject characterPrefab; //6
+    private List<int> loadedGrid;
 
+    List<int> gridOne = new List<int>()
+    {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    };
 
-   
-    
-    
+    List<int> gridTwo = new List<int>()
+    {
+        1, 1, 1, 0, 0, 0, 0, 1, 1, 1,
+        1, 1, 1, 0, 0, 0, 0, 6, 1, 1,
+        1, 1, 1, 0, 0, 0, 0, 1, 1, 1,
+        1, 1, 1, 0, 0, 0, 0, 1, 1, 1,
+        1, 1, 1, 0, 0, 0, 0, 1, 1, 1,
+        1, 1, 1, 0, 0, 0, 0, 1, 1, 1,
+        1, 1, 1, 0, 0, 0, 0, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+    };
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
+
     void Start()
     {
-        var gridOne = new List<int>()
-        {
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
-            0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
-            0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
-            0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
-            0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
-            0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-        };
-        GenerateGrid();
+        GenerateGrid(gridTwo);
         SetCameraPosition();
     }
 
-    void SetCameraPosition()
-    {   
-        Camera.main.transform.position= new Vector3(gridDimensions.x / 2, (gridDimensions.y/2)-0.5f, -10);
-        Camera.main.orthographicSize = (gridDimensions.y / 2) +0.5f;
+    #region public
 
+    /// <summary>
+    /// Get information of tile
+    /// </summary>
+    /// <param name="pos">tile's coordinate</param>
+    /// <returns>-1 if not find</returns>
+    public int GetTile(Vector2Int pos)
+    {
+        int index = pos.y * gridSize.x + pos.x;
+        if (index < 0
+            || loadedGrid == null ||
+            loadedGrid.Count < index ||
+            !(0 <= pos.x && pos.x <= gridSize.x) ||
+            !(0 <= pos.y && pos.y <= gridSize.y))
+            return -1;
+        return pos.y * gridSize.x + pos.x;
+    }
+
+    public Tuple<bool, GridType> canSteoOn(Vector3 pos)
+    {
+        //Get la value de la cell
+        int cellValue = loadedGrid[GetTile(new Vector2Int((int) pos.x, (int) pos.y))];
+        //Int to enum
+        GridType gridType = (GridType) Enum.ToObject(typeof(GridType), cellValue);
+        Tuple<bool, GridType> res;
+        switch (gridType)
+        {
+            case GridType.Character:
+            case GridType.Arrow:
+            case GridType.Point:
+            case GridType.Crate:
+            case GridType.Hole:
+            case GridType.Ground:
+                res = new Tuple<bool, GridType>(true, gridType);
+                break;
+            case GridType.Wall:
+            case GridType.Void:
+                res = new Tuple<bool, GridType>(false, gridType);
+                break;
+            default:
+                res = new Tuple<bool, GridType>(false, gridType);
+                break;
+        }
+
+        return res;
+    }
+
+    #endregion public
+
+    #region Private
+
+    void SetCameraPosition()
+    {
+        Camera.main.transform.position = new Vector3(gridSize.x / 2.0f, (gridSize.y / 2.0f) - 0.5f, -10);
+        Camera.main.orthographicSize = (gridSize.y / 2.0f) + 0.5f;
     }
 
     void GenerateGrid(List<int> matrix)
     {
-        if (matrix.Count > 100)
+        if (matrix.Count != 100)
         {
-            Debug.LogError("Attention la matice est trop grande, ("+matrix.Count +"/"+gridHeight*+gridWidth+")");
+            Debug.LogError("Attention la matice n'est pas de la bonne taile, (" + matrix.Count + "/"
+                           + gridSize.x * +gridSize.y + ")");
             return;
         }
-        for (int i = 0; i < 20; i++)
-            for (int j = 0; j < 20; j++)
+
+        loadedGrid = matrix;
+        for (int y = 0; y < gridSize.y; y++)
+        {
+            for (int x = 0; x < gridSize.x; x++)
             {
-                int cellValue = matrix[i * gridWidth * j];
-                
-                GenerateCell((GridType)cellValue, new Vector2());
-                
+                int cellValue = matrix[y * gridSize.x + x];
+                //gridSize.y-y parce que si non c'est instentié a l'enver ! :o
+                // -1 pour start a 0
+                // GenerateCell((GridType) cellValue, new Vector2(x, gridSize.y-y-1));
+                GenerateCell((GridType) cellValue, new Vector2(x, y));
             }
+        }
     }
 
-    void GenerateCell(GridType t, Vector3 pos)
+    void GenerateCell(GridType t, Vector2 pos)
     {
-        if(t == GridType.Void)
+        if (t == GridType.Void)
             return;
-
-        GameObject currentGround = Instantiate(groundPrefab, pos, Quaternion.identity, transform);
-        
+        InstantiateTiles(groundPrefab, pos, SpriteLayer.Ground);
         switch (t)
         {
             case GridType.Point:
+                InstantiateTiles(pointPrefab, pos, SpriteLayer.Prop);
                 break;
             case GridType.Crate:
+                InstantiateTiles(cratePrefab, pos, SpriteLayer.Prop);
                 break;
             case GridType.Hole:
+                InstantiateTiles(holePrefab, pos, SpriteLayer.Prop);
                 break;
             case GridType.Arrow:
+                InstantiateTiles(arrowPrefab, pos, SpriteLayer.Prop);
                 break;
-            
-            case GridType.Ground:
+            case GridType.Character:
+                InstantiateTiles(characterPrefab, pos, SpriteLayer.Character);
+                break;
             default:
                 break;
         }
     }
 
-    void SetSpriteRendererLayer()   
+    void InstantiateTiles(GameObject dd, Vector2 pos, SpriteLayer sl)
     {
-        
-    }
-    void GenerateGrid()
-    {
-        for (int i = 0; i < gridDimensions[0]; i++)
+        GameObject go = Instantiate(dd, pos, Quaternion.identity, transform);
+        SpriteRenderer sr;
+        if (!go.TryGetComponent(out sr))
         {
-            for (int j = 0; j < gridDimensions[1]; j++)
-            {
-                Vector3 tilePosition = transform.position;
-                tilePosition.x += i; //- Mathf.Floor(gridDimensions[0] / 2 + 0.5f);
-                tilePosition.y += j; // - Mathf.Floor(gridDimensions[1] / 2 + 0.5f);
-                GameObject currentGround = Instantiate(ground[0], tilePosition, Quaternion.identity, transform);
-                currentGround.name = "Tile " + i + j;
-            }
+            Debug.LogAssertion("Il manque un SpriteRenderer");
+            return;
         }
 
-        for (int i = 0; i < winPointsCoordonates.Count; i++)
-        {
-            Vector2 victoryPosition = Vector2.zero;
-            victoryPosition.x = winPointsCoordonates[i][0];
-            victoryPosition.y = winPointsCoordonates[i][1];
-            Instantiate(winPointsPrefab, victoryPosition, Quaternion.identity, transform);
-        }
-        
-        for (int i = 0; i < brickCoordinates.Count; i++)
-        {
-            Vector2 brickPosition = Vector2.zero;
-            brickPosition.x = brickCoordinates[i][0];
-            brickPosition.y = brickCoordinates[i][1];
-            Instantiate(brickPrefab, brickPosition, Quaternion.identity, transform);
-        }
+        sr.sortingOrder = (int) sl;
     }
+
+    #endregion Private
 }

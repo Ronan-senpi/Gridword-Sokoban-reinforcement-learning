@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -152,14 +152,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12813947cc3592943b7cd45796e0a3c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridDimensions: {x: 10, y: 10}
-  ground:
-  - {fileID: 8000699105306203449, guid: 766e7db970ef0244897e83e6f58b4525, type: 3}
-  winPointsCoordonates:
-  - {x: 2, y: 2}
-  winPointsPrefab: {fileID: 7905654252686533502, guid: afc1132c59b4bd647a2cfe9b860f1e5b, type: 3}
-  brickCoordinates: []
-  brickPrefab: {fileID: 0}
+  groundPrefab: {fileID: 8000699105306203449, guid: 766e7db970ef0244897e83e6f58b4525, type: 3}
+  pointPrefab: {fileID: 7905654252686533502, guid: afc1132c59b4bd647a2cfe9b860f1e5b, type: 3}
+  cratePrefab: {fileID: 1454959512740603089, guid: 3024576974476c348b5847ec66e20835, type: 3}
+  holePrefab: {fileID: 8164655277028664705, guid: 5a697fea29d734342a307151f8af5130, type: 3}
+  arrowPrefab: {fileID: 1282544342967762278, guid: f878040889b070641994d83f40aae662, type: 3}
+  characterPrefab: {fileID: 615471870193437238, guid: db7b2321804a88f4eab5a176736f0ebc, type: 3}
 --- !u!4 &795512183
 Transform:
   m_ObjectHideFlags: 0

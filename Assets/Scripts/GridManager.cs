@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using classes;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,15 +27,94 @@ public class GridManager : MonoBehaviour
     [Header("Brick Setup")] [SerializeField]
     private List<Vector2> brickCoordinates;
 
-    [SerializeField] private GameObject brickPrefab;
 
     #endregion
 
+    private int gridHeight = 10;
+    private int gridWidth = 10;
+
+    [SerializeField] private GameObject groundPrefab; // 1
+    [SerializeField] private GameObject pointPrefab; // 2
+    [SerializeField] private GameObject cratePrefab; // 3
+    [SerializeField] private GameObject holePrefab; //4
+    [SerializeField] private GameObject arrowPrefab; //5
+    [SerializeField] private GameObject characterPrefab;
+
+
+   
+    
+    
     void Start()
     {
+        var gridOne = new List<int>()
+        {
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+            0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+            0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+            0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+            0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+            0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+        };
         GenerateGrid();
+        SetCameraPosition();
     }
 
+    void SetCameraPosition()
+    {   
+        Camera.main.transform.position= new Vector3(gridDimensions.x / 2, (gridDimensions.y/2)-0.5f, -10);
+        Camera.main.orthographicSize = (gridDimensions.y / 2) +0.5f;
+
+    }
+
+    void GenerateGrid(List<int> matrix)
+    {
+        if (matrix.Count > 100)
+        {
+            Debug.LogError("Attention la matice est trop grande, ("+matrix.Count +"/"+gridHeight*+gridWidth+")");
+            return;
+        }
+        for (int i = 0; i < 20; i++)
+            for (int j = 0; j < 20; j++)
+            {
+                int cellValue = matrix[i * gridWidth * j];
+                
+                GenerateCell((GridType)cellValue, new Vector2());
+                
+            }
+    }
+
+    void GenerateCell(GridType t, Vector3 pos)
+    {
+        if(t == GridType.Void)
+            return;
+
+        GameObject currentGround = Instantiate(groundPrefab, pos, Quaternion.identity, transform);
+        
+        switch (t)
+        {
+            case GridType.Point:
+                break;
+            case GridType.Crate:
+                break;
+            case GridType.Hole:
+                break;
+            case GridType.Arrow:
+                break;
+            
+            case GridType.Ground:
+            default:
+                break;
+        }
+    }
+
+    void SetSpriteRendererLayer()   
+    {
+        
+    }
     void GenerateGrid()
     {
         for (int i = 0; i < gridDimensions[0]; i++)

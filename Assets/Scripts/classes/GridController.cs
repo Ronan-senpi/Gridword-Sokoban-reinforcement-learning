@@ -6,6 +6,8 @@ namespace classes
 {
     public class GridController
     {
+        public bool Win { get; private set; }
+        public bool GridChange { get; private set; }
         public List<int> CurrentGrid
         {
             get
@@ -14,7 +16,6 @@ namespace classes
                 return currentGrid;
             }
         }
-
         public bool PlayerChange { get; private set; }
         private Vector2Int playerPosition;
         public Vector2Int PlayerPosition {
@@ -24,7 +25,6 @@ namespace classes
                 return playerPosition;
             }
         }
-        public bool GridChange { get; private set; }
 
         private List<int> currentGrid, tmpGrid, startGrid;
         private Vector2Int gridSize = new Vector2Int(10, 10);
@@ -86,6 +86,10 @@ namespace classes
                 case (int) GridType.Point:
                 case (int) GridType.Hole:
                 case (int) GridType.Ground:
+                    res = true;
+                    break;
+                case (int) GridType.Door:
+                    Win = true;
                     res = true;
                     break;
                 case (int) GridType.Wall:

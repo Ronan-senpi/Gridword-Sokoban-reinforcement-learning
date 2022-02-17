@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using classes;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -13,7 +14,7 @@ public class GridManager : MonoBehaviour
     public GridController gc { get; private set; }
 
     [SerializeField] private Transform playerContainer;
-    
+    [SerializeField] private Transform winScreen;
     [SerializeField] private GameObject groundPrefab; // 1
     [SerializeField] private GameObject pointPrefab; // 2
     [SerializeField] private GameObject cratePrefab; // 3
@@ -21,6 +22,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private GameObject arrowPrefab; //5
     [SerializeField] private GameObject characterPrefab; //6
     [SerializeField] private GameObject wallPrefab; //7
+    [SerializeField] private GameObject doorPrefab; //8
     private List<int> loadedGrid;
 
     List<int> gridOne = new List<int>()
@@ -40,7 +42,7 @@ public class GridManager : MonoBehaviour
     List<int> gridTwo = new List<int>()
     {
         7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
+        7, 1, 1, 1, 7, 1, 1, 8, 1, 7,
         7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
         7, 1, 1, 1, 7, 1, 1, 3, 1, 7,
         7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
@@ -83,6 +85,15 @@ public class GridManager : MonoBehaviour
     {
         UpdateGrid();
         UpdatePlayer();
+        UpdateWin();
+    }
+
+    private void UpdateWin()
+    {
+        if (gc.Win)
+        {
+            winScreen.gameObject.SetActive(true);
+        }
     }
 
     private void UpdatePlayer()
@@ -167,6 +178,9 @@ public class GridManager : MonoBehaviour
                 break;
             case GridType.Wall:
                 InstantiateTiles(wallPrefab, pos, SpriteLayer.Prop);
+                break;
+            case GridType.Door:
+                InstantiateTiles(doorPrefab, pos, SpriteLayer.Prop);
                 break;
             default:
                 break;

@@ -10,5 +10,6 @@ namespace classes
         Arrow = 5,
         Character = 6,
         Wall = 7,
+        Door = 8,
     }
 }

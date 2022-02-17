@@ -3,19 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using classes;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class GridManager : MonoBehaviour
 {
     public static GridManager Instance { get; private set; }
     private Vector2Int gridSize = new Vector2Int(10, 10);
-
+    public GridController gc { get; private set; }
+    
     [SerializeField] private GameObject groundPrefab; // 1
     [SerializeField] private GameObject pointPrefab; // 2
     [SerializeField] private GameObject cratePrefab; // 3
     [SerializeField] private GameObject holePrefab; //4
     [SerializeField] private GameObject arrowPrefab; //5
     [SerializeField] private GameObject characterPrefab; //6
+    [SerializeField] private GameObject wallPrefab; //7
     private List<int> loadedGrid;
 
     List<int> gridOne = new List<int>()
@@ -34,16 +37,16 @@ public class GridManager : MonoBehaviour
 
     List<int> gridTwo = new List<int>()
     {
-        1, 1, 1, 0, 0, 0, 0, 1, 1, 1,
-        1, 1, 1, 0, 0, 0, 0, 6, 1, 1,
-        1, 1, 1, 0, 0, 0, 0, 1, 1, 1,
-        1, 1, 1, 0, 0, 0, 0, 1, 1, 1,
-        1, 1, 1, 0, 0, 0, 0, 1, 1, 1,
-        1, 1, 1, 0, 0, 0, 0, 1, 1, 1,
-        1, 1, 1, 0, 0, 0, 0, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+        7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
+        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
+        7, 1, 1, 1, 7, 1, 1, 3, 1, 7,
+        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
+        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
+        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
+        7, 4, 1, 1, 1, 1, 1, 1, 1, 7,
+        7, 1, 1, 1, 1, 1, 1, 1, 1, 7,
+        7, 7, 7, 7, 7, 7, 7, 7, 7, 7
     };
 
     private void Awake()
@@ -53,63 +56,38 @@ public class GridManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
+        
+        gc = new GridController(gridTwo);
         Instance = this;
     }
 
     void Start()
     {
-        GenerateGrid(gridTwo);
+        GenerateGrid(gc.CurrentGrid);
         SetCameraPosition();
+    }
+
+    private void Update()
+    {
+        UpdateGrid();
+        UpdatePlayer();
+    }
+
+    private void UpdatePlayer()
+    {
+        if (!gc.GridChange)
+            return;
+        
+        GenerateGrid(gc.CurrentGrid);
+    }
+
+    void UpdateGrid()
+    {
     }
 
     #region public
 
-    /// <summary>
-    /// Get information of tile
-    /// </summary>
-    /// <param name="pos">tile's coordinate</param>
-    /// <returns>-1 if not find</returns>
-    public int GetTile(Vector2Int pos)
-    {
-        int index = pos.y * gridSize.x + pos.x;
-        if (index < 0
-            || loadedGrid == null ||
-            loadedGrid.Count < index ||
-            !(0 <= pos.x && pos.x <= gridSize.x) ||
-            !(0 <= pos.y && pos.y <= gridSize.y))
-            return -1;
-        return pos.y * gridSize.x + pos.x;
-    }
 
-    public Tuple<bool, GridType> canSteoOn(Vector3 pos)
-    {
-        //Get la value de la cell
-        int cellValue = loadedGrid[GetTile(new Vector2Int((int) pos.x, (int) pos.y))];
-        //Int to enum
-        GridType gridType = (GridType) Enum.ToObject(typeof(GridType), cellValue);
-        Tuple<bool, GridType> res;
-        switch (gridType)
-        {
-            case GridType.Character:
-            case GridType.Arrow:
-            case GridType.Point:
-            case GridType.Crate:
-            case GridType.Hole:
-            case GridType.Ground:
-                res = new Tuple<bool, GridType>(true, gridType);
-                break;
-            case GridType.Wall:
-            case GridType.Void:
-                res = new Tuple<bool, GridType>(false, gridType);
-                break;
-            default:
-                res = new Tuple<bool, GridType>(false, gridType);
-                break;
-        }
-
-        return res;
-    }
 
     #endregion public
 
@@ -129,7 +107,11 @@ public class GridManager : MonoBehaviour
                            + gridSize.x * +gridSize.y + ")");
             return;
         }
-
+        
+        foreach (Transform child in transform) {
+            GameObject.Destroy(child.gameObject);
+        }
+        
         loadedGrid = matrix;
         for (int y = 0; y < gridSize.y; y++)
         {
@@ -164,7 +146,10 @@ public class GridManager : MonoBehaviour
                 InstantiateTiles(arrowPrefab, pos, SpriteLayer.Prop);
                 break;
             case GridType.Character:
-                InstantiateTiles(characterPrefab, pos, SpriteLayer.Character);
+               // InstantiateTiles(characterPrefab, pos, SpriteLayer.Character);
+                break;
+            case GridType.Wall:
+                InstantiateTiles(wallPrefab, pos, SpriteLayer.Prop);
                 break;
             default:
                 break;

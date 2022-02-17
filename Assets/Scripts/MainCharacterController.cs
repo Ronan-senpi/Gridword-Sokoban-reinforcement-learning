@@ -14,15 +14,17 @@ public class MainCharacterController : MonoBehaviour
     /// Max 1
     /// Min -1
     /// </param>
-    protected void Move(Vector2Int direction)
+    public void Move(Vector2Int direction)
     {
-        Vector3 vec = CapVector(direction);
-        GridType gt;
-        bool canStep;
-       (canStep, gt) = GridManager.Instance.canSteoOn(transform.position + vec);
-        if(!canStep)
-            return;
-        transform.position += vec;
+        Vector2Int pos = new Vector2Int((int)transform.position.x,(int)transform.position.y);
+        GridManager.Instance.gc.MovePlayer(direction);
+       //  Vector3 vec = CapVector(direction);
+       //  int gt;
+       //  bool canStep;
+       // (canStep, gt) = GridManager.Instance.canSteoOn(transform.position + vec, vec);
+       //  if(!canStep)    
+       //      return;
+        // transform.position += vec;
     }
 
 

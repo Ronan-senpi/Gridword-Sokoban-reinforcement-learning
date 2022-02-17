@@ -5,18 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="153189f3-f843-44a8-af03-e20bf390d13f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/classes/GridController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/classes/GridController.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.reinforcement-learning/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.reinforcement-learning/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/SpritesPrefabs/CratePrefab.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/SpritesPrefabs/CratePrefab.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/SpritesPrefabs/PointPrefab.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/SpritesPrefabs/PointPrefab.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/SpritesPrefabs/TilePrefab.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/SpritesPrefabs/TilePrefab.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/SpritesPrefabs/arrow.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/SpritesPrefabs/arrow.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/SpritesPrefabs/character.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/SpritesPrefabs/character.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/SpritesPrefabs/hole.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/SpritesPrefabs/hole.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/GridWorld.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/GridWorld.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/GridManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GridManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/MainCharacterController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/MainCharacterController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +38,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.34471717" />
     <property name="DebuggerViewTab_PTCS_LastProportionKey" value="0.0" />
     <property name="Discover.Launch.Via.Unity" value="true" />
@@ -73,10 +63,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="8776">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="15704">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="8776" />
+      <option name="pid" value="15704" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -94,7 +84,7 @@
       <updated>1645017872555</updated>
       <workItem from="1645017880241" duration="6003000" />
       <workItem from="1645024759915" duration="7102000" />
-      <workItem from="1645083736990" duration="9542000" />
+      <workItem from="1645083736990" duration="11929000" />
     </task>
     <servers />
   </component>
@@ -117,6 +107,26 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/classes/GridController.cs</url>
+          <line>67</line>
+          <properties documentPath="C:\Projects\ESGI S2\reinforcement-learning\Assets\Scripts\classes\GridController.cs" initialLine="67" containingFunctionPresentation="method 'MovePlayer'">
+            <startOffsets>
+              <option value="1855" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1856" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

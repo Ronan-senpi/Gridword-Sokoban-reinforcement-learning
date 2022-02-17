@@ -11,6 +11,8 @@ public class GridManager : MonoBehaviour
     public static GridManager Instance { get; private set; }
     private Vector2Int gridSize = new Vector2Int(10, 10);
     public GridController gc { get; private set; }
+
+    [SerializeField] private Transform playerContainer;
     
     [SerializeField] private GameObject groundPrefab; // 1
     [SerializeField] private GameObject pointPrefab; // 2
@@ -57,14 +59,24 @@ public class GridManager : MonoBehaviour
             return;
         }
         
-        gc = new GridController(gridTwo);
+        gc = new GridController(gridTwo, Vector2Int.one);
         Instance = this;
     }
 
     void Start()
     {
         GenerateGrid(gc.CurrentGrid);
+        GeneratePlayer(gc.PlayerPosition);
         SetCameraPosition();
+    }
+
+    private void GeneratePlayer(Vector2Int pp)
+    {
+        foreach (Transform child in playerContainer)
+        {
+            GameObject.Destroy(child.gameObject); 
+        }
+        InstantiateTiles(characterPrefab, pp, SpriteLayer.Character, playerContainer );
     }
 
     private void Update()
@@ -75,14 +87,19 @@ public class GridManager : MonoBehaviour
 
     private void UpdatePlayer()
     {
+       
+        if (!gc.PlayerChange)
+            return;
+        
+        GeneratePlayer(gc.PlayerPosition);
+    }
+
+    private void UpdateGrid()
+    {
         if (!gc.GridChange)
             return;
         
         GenerateGrid(gc.CurrentGrid);
-    }
-
-    void UpdateGrid()
-    {
     }
 
     #region public
@@ -158,7 +175,11 @@ public class GridManager : MonoBehaviour
 
     void InstantiateTiles(GameObject dd, Vector2 pos, SpriteLayer sl)
     {
-        GameObject go = Instantiate(dd, pos, Quaternion.identity, transform);
+        InstantiateTiles(dd,pos,sl,transform);
+    }
+    void InstantiateTiles(GameObject dd, Vector2 pos, SpriteLayer sl, Transform parent)
+    {
+        GameObject go = Instantiate(dd, pos, Quaternion.identity, parent);
         SpriteRenderer sr;
         if (!go.TryGetComponent(out sr))
         {
@@ -168,6 +189,5 @@ public class GridManager : MonoBehaviour
 
         sr.sortingOrder = (int) sl;
     }
-
     #endregion Private
 }

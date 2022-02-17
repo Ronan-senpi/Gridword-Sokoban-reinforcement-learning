@@ -27,7 +27,7 @@ namespace classes
         {
             Vector2Int destination = playerPosition + direction;
             int indexDestination = destination.y * gridSize.x + destination.x;
-            if (StepOnCrate(destination))
+            if (cratesPositions!= null && StepOnCrate(destination))
                 if (!CanAndMoveCrate(destination, direction))
                     return;
 

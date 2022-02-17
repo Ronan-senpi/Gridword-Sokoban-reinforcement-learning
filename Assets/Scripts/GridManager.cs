@@ -33,12 +33,12 @@ public class GridManager : MonoBehaviour
     {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
-        0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
-        0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
-        0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
-        0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
-        0, 0, 0, 1, 1, 1, 1, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 7, 7, 7, 7, 7, 0, 0, 0,
+        0, 0, 7, 1, 1, 8, 7, 0, 0, 0,
+        0, 0, 7, 1, 1, 7, 7, 0, 0, 0,
+        0, 0, 7, 1, 1, 1, 7, 0, 0, 0,
+        0, 0, 7, 7, 7, 7, 7, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     };
@@ -71,7 +71,7 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        gc = new GridController(gridTwo, Vector2Int.one, cratesTwo);
+        gc = new GridController(gridOne, new Vector2Int(3,6));
         Instance = this;
     }
 
@@ -85,6 +85,9 @@ public class GridManager : MonoBehaviour
 
     private void GenerateCrate(List<Vector2Int> cratesPositions)
     {
+        if(cratesPositions == null)
+            return;
+        
         foreach (Transform child in crateContainer)
         {
             GameObject.Destroy(child.gameObject);

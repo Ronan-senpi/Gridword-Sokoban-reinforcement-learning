@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="153189f3-f843-44a8-af03-e20bf390d13f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.reinforcement-learning/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.reinforcement-learning/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/GridWorld.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/GridWorld.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/GridManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GridManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/classes/GridController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/classes/GridController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,9 +28,16 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/695d1cc93cca45069c528c15c9fdd7493e2800/36/02b85da6/List`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Destroyable.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/351e49e2a5bf4fd6beabb458ce2255f3ff600/ca/7363510e/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -84,7 +94,7 @@
       <updated>1645017872555</updated>
       <workItem from="1645017880241" duration="6003000" />
       <workItem from="1645024759915" duration="7102000" />
-      <workItem from="1645083736990" duration="11929000" />
+      <workItem from="1645083736990" duration="21844000" />
     </task>
     <servers />
   </component>
@@ -115,16 +125,29 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Scripts/classes/GridController.cs</url>
-          <line>67</line>
-          <properties documentPath="C:\Projects\ESGI S2\reinforcement-learning\Assets\Scripts\classes\GridController.cs" initialLine="67" containingFunctionPresentation="method 'MovePlayer'">
+          <line>150</line>
+          <properties documentPath="C:\Projects\ESGI S2\reinforcement-learning\Assets\Scripts\classes\GridController.cs" initialLine="152" containingFunctionPresentation="method 'CanAndMoveCrate'">
             <startOffsets>
-              <option value="1855" />
+              <option value="4274" />
             </startOffsets>
             <endOffsets>
-              <option value="1856" />
+              <option value="4310" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="23" />
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/classes/GridController.cs</url>
+          <line>144</line>
+          <properties documentPath="C:\Projects\ESGI S2\reinforcement-learning\Assets\Scripts\classes\GridController.cs" initialLine="146" containingFunctionPresentation="method 'CanAndMoveCrate'">
+            <startOffsets>
+              <option value="4028" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4029" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="30" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

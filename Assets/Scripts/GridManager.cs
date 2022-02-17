@@ -14,7 +14,11 @@ public class GridManager : MonoBehaviour
     public GridController gc { get; private set; }
 
     [SerializeField] private Transform playerContainer;
+    [SerializeField] private Transform crateContainer;
     [SerializeField] private Transform winScreen;
+
+    [Header("Cells prefabs")] 
+    
     [SerializeField] private GameObject groundPrefab; // 1
     [SerializeField] private GameObject pointPrefab; // 2
     [SerializeField] private GameObject cratePrefab; // 3
@@ -44,13 +48,19 @@ public class GridManager : MonoBehaviour
         7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
         7, 1, 1, 1, 7, 1, 1, 8, 1, 7,
         7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
-        7, 1, 1, 1, 7, 1, 1, 3, 1, 7,
+        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
         7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
         7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
         7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
         7, 4, 1, 1, 1, 1, 1, 1, 1, 7,
         7, 1, 1, 1, 1, 1, 1, 1, 1, 7,
         7, 7, 7, 7, 7, 7, 7, 7, 7, 7
+    };
+
+    private List<Vector2Int> cratesTwo = new List<Vector2Int>()
+    {
+        new Vector2Int(5, 5),
+        new Vector2Int(6, 6),
     };
 
     private void Awake()
@@ -60,8 +70,8 @@ public class GridManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        
-        gc = new GridController(gridTwo, Vector2Int.one);
+
+        gc = new GridController(gridTwo, Vector2Int.one, cratesTwo);
         Instance = this;
     }
 
@@ -69,16 +79,31 @@ public class GridManager : MonoBehaviour
     {
         GenerateGrid(gc.CurrentGrid);
         GeneratePlayer(gc.PlayerPosition);
+        GenerateCrate(gc.CratesPositions);
         SetCameraPosition();
+    }
+
+    private void GenerateCrate(List<Vector2Int> cratesPositions)
+    {
+        foreach (Transform child in crateContainer)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+
+        foreach (Vector2Int crate in cratesPositions)
+        {
+            InstantiateTiles(cratePrefab, crate, SpriteLayer.Character, crateContainer);
+        }
     }
 
     private void GeneratePlayer(Vector2Int pp)
     {
         foreach (Transform child in playerContainer)
         {
-            GameObject.Destroy(child.gameObject); 
+            GameObject.Destroy(child.gameObject);
         }
-        InstantiateTiles(characterPrefab, pp, SpriteLayer.Character, playerContainer );
+
+        InstantiateTiles(characterPrefab, pp, SpriteLayer.Character, playerContainer);
     }
 
     private void Update()
@@ -86,6 +111,15 @@ public class GridManager : MonoBehaviour
         UpdateGrid();
         UpdatePlayer();
         UpdateWin();
+        UpdateCrate();
+    }
+
+    private void UpdateCrate()
+    {
+        if (!gc.CratesChange)
+            return;
+
+        GenerateCrate(gc.CratesPositions);
     }
 
     private void UpdateWin()
@@ -98,10 +132,9 @@ public class GridManager : MonoBehaviour
 
     private void UpdatePlayer()
     {
-       
         if (!gc.PlayerChange)
             return;
-        
+
         GeneratePlayer(gc.PlayerPosition);
     }
 
@@ -109,13 +142,11 @@ public class GridManager : MonoBehaviour
     {
         if (!gc.GridChange)
             return;
-        
+
         GenerateGrid(gc.CurrentGrid);
     }
 
     #region public
-
-
 
     #endregion public
 
@@ -135,11 +166,12 @@ public class GridManager : MonoBehaviour
                            + gridSize.x * +gridSize.y + ")");
             return;
         }
-        
-        foreach (Transform child in transform) {
+
+        foreach (Transform child in transform)
+        {
             GameObject.Destroy(child.gameObject);
         }
-        
+
         loadedGrid = matrix;
         for (int y = 0; y < gridSize.y; y++)
         {
@@ -174,7 +206,7 @@ public class GridManager : MonoBehaviour
                 InstantiateTiles(arrowPrefab, pos, SpriteLayer.Prop);
                 break;
             case GridType.Character:
-               // InstantiateTiles(characterPrefab, pos, SpriteLayer.Character);
+                // InstantiateTiles(characterPrefab, pos, SpriteLayer.Character);
                 break;
             case GridType.Wall:
                 InstantiateTiles(wallPrefab, pos, SpriteLayer.Prop);
@@ -189,19 +221,22 @@ public class GridManager : MonoBehaviour
 
     void InstantiateTiles(GameObject dd, Vector2 pos, SpriteLayer sl)
     {
-        InstantiateTiles(dd,pos,sl,transform);
+        InstantiateTiles(dd, pos, sl, transform);
     }
+
     void InstantiateTiles(GameObject dd, Vector2 pos, SpriteLayer sl, Transform parent)
     {
         GameObject go = Instantiate(dd, pos, Quaternion.identity, parent);
         SpriteRenderer sr;
         if (!go.TryGetComponent(out sr))
         {
+            GameObject.Destroy(go);
             Debug.LogAssertion("Il manque un SpriteRenderer");
             return;
         }
 
         sr.sortingOrder = (int) sl;
     }
+
     #endregion Private
 }

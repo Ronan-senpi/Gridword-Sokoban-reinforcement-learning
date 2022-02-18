@@ -1,6 +1,6 @@
 ﻿namespace classes.Algo
 {
-    public class ValueInteration
+    public class ValueIteration
     {
         
     }

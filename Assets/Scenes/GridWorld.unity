@@ -229,6 +229,7 @@ MonoBehaviour:
   characterPrefab: {fileID: 615471870193437238, guid: db7b2321804a88f4eab5a176736f0ebc, type: 3}
   wallPrefab: {fileID: 3891582783505807595, guid: e35aa30511b0d8d44be44aee75876342, type: 3}
   doorPrefab: {fileID: 5985645103921879109, guid: ffa660e5675c592458c052e8788ec1c6, type: 3}
+  textPrefab: {fileID: 27016796504332831, guid: 916b522413cbcec4daa7a010bb50972b, type: 3}
 --- !u!4 &795512183
 Transform:
   m_ObjectHideFlags: 0

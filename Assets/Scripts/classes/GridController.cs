@@ -95,7 +95,7 @@ namespace classes
 
         #region Grid
 
-        public bool GridChange { get; private set; }
+        public bool GridChange { get; private set; } = false;
 
         public List<int> StartGrid
         {
@@ -115,7 +115,7 @@ namespace classes
         }
 
         private List<int> currentGrid, tmpGrid, startGrid;
-        public Vector2Int GridSize { get; private set; } = new Vector2Int(10, 10);
+        public Vector2Int GridSize { get; private set; } = new Vector2Int(10, 11);
 
         private void InitGrid(List<int> grid)
         {
@@ -143,7 +143,7 @@ namespace classes
             int index = pos.y * GridSize.x + pos.x;
             if (0 > index || index >= currentGrid.Count)
                 return -1;
-            return currentGrid[pos.y * GridSize.x + pos.x];
+            return currentGrid[index];
         }
 
         #endregion Grid

@@ -11,7 +11,6 @@ using UnityEngine.UI;
 public class GridManager : MonoBehaviour
 {
     public static GridManager Instance { get; private set; }
-    private Vector2Int gridSize = new Vector2Int(10, 10);
     public GridController gc { get; private set; }
 
     [SerializeField] private Transform playerContainer;
@@ -59,6 +58,20 @@ public class GridManager : MonoBehaviour
         7, 7, 7, 7, 7, 7, 7, 7, 7, 7
     };
 
+    private List<int> gridThree = new List<int>()
+    {
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+    };
     private List<Vector2Int> cratesTwo = new List<Vector2Int>()
     {
         new Vector2Int(5, 5),
@@ -73,7 +86,7 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        gc = new GridController(gridOne, new Vector2Int(3,6));
+        gc = new GridController(gridThree, new Vector2Int(3,6));
         Instance = this;
     }
 
@@ -159,18 +172,18 @@ public class GridManager : MonoBehaviour
 
     void SetCameraPosition()
     {
-        Camera.main.transform.position = new Vector3(gridSize.x / 2.0f, (gridSize.y / 2.0f) - 0.5f, -10);
-        Camera.main.orthographicSize = (gridSize.y / 2.0f) + 0.5f;
+        Camera.main.transform.position = new Vector3(gc.GridSize.x / 2.0f, (gc.GridSize.y / 2.0f) - 0.5f, -10);
+        Camera.main.orthographicSize = (gc.GridSize.y / 2.0f) + 0.5f;
     }
 
     void GenerateGrid(List<int> matrix)
     {
-        if (matrix.Count != 100)
-        {
-            Debug.LogError("Attention la matice n'est pas de la bonne taile, (" + matrix.Count + "/"
-                           + gridSize.x * +gridSize.y + ")");
-            return;
-        }
+        // if (matrix.Count != 100)
+        // {
+        //     Debug.LogError("Attention la matice n'est pas de la bonne taile, (" + matrix.Count + "/"
+        //                    + gridSize.x * +gridSize.y + ")");
+        //     return;
+        // }
 
         foreach (Transform child in transform)
         {
@@ -178,11 +191,11 @@ public class GridManager : MonoBehaviour
         }
 
         loadedGrid = matrix;
-        for (int y = 0; y < gridSize.y; y++)
+        for (int x = 0; x < gc.GridSize.x; x++)
         {
-            for (int x = 0; x < gridSize.x; x++)
+            for (int y = 0; y < gc.GridSize.y; y++)
             {
-                int cellValue = matrix[y * gridSize.x + x];
+                int cellValue = matrix[y * gc.GridSize.x + x];
                 //gridSize.y-y parce que si non c'est instentié a l'enver ! :o
                 // -1 pour start a 0
                 // GenerateCell((GridType) cellValue, new Vector2(x, gridSize.y-y-1));
@@ -234,7 +247,7 @@ public class GridManager : MonoBehaviour
         GameObject go = Instantiate(dd, pos, Quaternion.identity, parent);
         GameObject text = Instantiate(textPrefab, pos, Quaternion.identity, go.transform);
         TMP_Text tmp = text.GetComponent<TMP_Text>();
-        tmp.text = (pos.y * gridSize.x + pos.x).ToString();
+        tmp.text = (pos.y * gc.GridSize.x + pos.x).ToString();
         SpriteRenderer sr;
         if (!go.TryGetComponent(out sr))
         {

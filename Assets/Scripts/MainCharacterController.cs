@@ -16,15 +16,7 @@ public class MainCharacterController : MonoBehaviour
     /// </param>
     public void Move(Vector2Int direction)
     {
-        Vector2Int pos = new Vector2Int((int)transform.position.x,(int)transform.position.y);
         GridManager.Instance.gc.MovePlayer(direction);
-       //  Vector3 vec = CapVector(direction);
-       //  int gt;
-       //  bool canStep;
-       // (canStep, gt) = GridManager.Instance.canSteoOn(transform.position + vec, vec);
-       //  if(!canStep)    
-       //      return;
-        // transform.position += vec;
     }
 
 

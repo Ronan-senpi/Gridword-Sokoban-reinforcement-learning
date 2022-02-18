@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using classes;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -27,6 +28,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private GameObject characterPrefab; //6
     [SerializeField] private GameObject wallPrefab; //7
     [SerializeField] private GameObject doorPrefab; //8
+    [SerializeField] private GameObject textPrefab;
     private List<int> loadedGrid;
 
     List<int> gridOne = new List<int>()
@@ -230,6 +232,9 @@ public class GridManager : MonoBehaviour
     void InstantiateTiles(GameObject dd, Vector2 pos, SpriteLayer sl, Transform parent)
     {
         GameObject go = Instantiate(dd, pos, Quaternion.identity, parent);
+        GameObject text = Instantiate(textPrefab, pos, Quaternion.identity, go.transform);
+        TMP_Text tmp = text.GetComponent<TMP_Text>();
+        tmp.text = (pos.y * gridSize.x + pos.x).ToString();
         SpriteRenderer sr;
         if (!go.TryGetComponent(out sr))
         {

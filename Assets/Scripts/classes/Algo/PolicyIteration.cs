@@ -2,6 +2,9 @@
 {
     public class PolicyIteration
     {
-        
+        void Init()
+        {
+            
+        }
     }
 }

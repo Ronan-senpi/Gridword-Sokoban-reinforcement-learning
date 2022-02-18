@@ -10,15 +10,18 @@ namespace classes.Algo
 
         public float Gamma { get; private set; }
 
-        public ValueIteration(float gamma, GridController grid)
+        public ValueIteration(GridController grid, float gamma, float theta = 0.01f)
         {
+            #region Initialisation
+
             this.Gamma = gamma;
+            float delta = 0f;
             List<int> gridValues = grid.StartGrid;
             for (int y = 0; y < grid.GridSize.y; y++)
             {
                 for (int x = 0; x < grid.GridSize.x; x++)
                 {
-                    switch ((GridType) grid.GetTile(new Vector2Int(x, y)))
+                    switch ((GridType)grid.GetTile(new Vector2Int(x, y)))
                     {
                         case GridType.Door:
                             states.Add(new State(1));
@@ -41,6 +44,30 @@ namespace classes.Algo
                     }
                 }
             }
+
+            #endregion
+
+            do
+            {
+                delta = 0;
+                for (int y = 0; y < grid.GridSize.y; y++)
+                {
+                    for (int x = 0; x < grid.GridSize.x; x++)
+                    {
+                        int stateIndex = y * grid.GridSize.x + x;
+                        if (states[stateIndex] != null)
+                        {
+                            float temp = states[stateIndex].StateValue;
+                            float actionValue = 0;
+                            foreach (Direction action in states[stateIndex].Actions)
+                            {
+                                Vector2Int nextState = grid.GetNextPosition(new Vector2Int(x, y), action);
+                                actionValue = states[nextState.y * grid.GridSize.x + nextState.x].GetReward() + gamma;
+                            }
+                        }
+                    }
+                }
+            } while (delta < theta);
         }
 
         public List<State> Compute()
@@ -49,16 +76,16 @@ namespace classes.Algo
         }
     }
 
-    public struct State
+    public class State
     {
-        public State(float? value, List<Direction> actions = null)
+        public State(float stateValue, List<Direction> actions = null)
         {
-            Value = value;
+            StateValue = stateValue;
             Actions = actions;
         }
 
-        public float? Value { get; set; }
-        private List<Direction> Actions { get; set; }
+        public float StateValue { get; set; }
+        public List<Direction> Actions { get; private set; }
 
         public float GetReward()
         {

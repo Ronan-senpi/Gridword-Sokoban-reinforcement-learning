@@ -24,7 +24,7 @@ namespace classes
                 
                 case ReinforcementType.Value:
                 default:
-                    ValueIteration vi = new ValueIteration(0.9f, grid);
+                    ValueIteration vi = new ValueIteration(grid,0.9f);
                     vi.Compute();
                     break;
             }

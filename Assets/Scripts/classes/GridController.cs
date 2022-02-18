@@ -28,7 +28,7 @@ namespace classes
         {
             Vector2Int destination = playerPosition + direction;
             int indexDestination = destination.y * GridSize.x + destination.x;
-            if (cratesPositions!= null && StepOnCrate(destination))
+            if (cratesPositions != null && StepOnCrate(destination))
                 if (!CanAndMoveCrate(destination, direction))
                     return;
 
@@ -42,45 +42,28 @@ namespace classes
 
         public bool CanStepOn(Vector2Int pos, Direction dir)
         {
-            Vector2Int tmpDes = pos;
-            switch (dir)
-            {
-                case Direction.Up:
-                    tmpDes = pos + Vector2Int.up;
-                    break;
-                case Direction.Down:
-                    tmpDes = pos + Vector2Int.down;
-                    break;
-                case Direction.Right:
-                    tmpDes = pos + Vector2Int.right;
-                    break;
-                case Direction.Left:
-                    tmpDes = pos + Vector2Int.left;
-                    break;
-                default:
-                    return false;
-                    break;
-            }
+            Vector2Int tmpDes = GetNextPosition(pos, dir);
             return CanStepOn(GetTile(tmpDes), false);
         }
+
         public bool CanStepOn(int cellValue, bool playerMovement = true)
         {
             bool res;
             switch (cellValue)
             {
-                case (int) GridType.Arrow:
-                case (int) GridType.Point:
-                case (int) GridType.Hole:
-                case (int) GridType.Ground:
+                case (int)GridType.Arrow:
+                case (int)GridType.Point:
+                case (int)GridType.Hole:
+                case (int)GridType.Ground:
                     res = true;
                     break;
-                case (int) GridType.Door:
+                case (int)GridType.Door:
                     if (playerMovement)
                         Win = true;
                     res = true;
                     break;
-                case (int) GridType.Wall:
-                case (int) GridType.Void:
+                case (int)GridType.Wall:
+                case (int)GridType.Void:
                     res = false;
                     break;
                 default:
@@ -99,10 +82,7 @@ namespace classes
 
         public List<int> StartGrid
         {
-            get
-            {
-                return startGrid;
-            }
+            get { return startGrid; }
         }
 
         public List<int> CurrentGrid
@@ -216,15 +196,40 @@ namespace classes
 
         public List<Direction> GetActionFromPosition(Vector2Int pos)
         {
-            List<Direction> dirs = new List<Direction>(); 
-            foreach (Direction dir in (Direction[]) Enum.GetValues(typeof(Direction)))
+            List<Direction> dirs = new List<Direction>();
+            foreach (Direction dir in (Direction[])Enum.GetValues(typeof(Direction)))
             {
-                if (CanStepOn(pos,dir))
+                if (CanStepOn(pos, dir))
                 {
                     dirs.Add(dir);
                 }
             }
+
             return dirs;
+        }
+
+        public Vector2Int GetNextPosition(Vector2Int pos, Direction dir)
+        {
+            Vector2Int tmpDes = pos;
+            switch (dir)
+            {
+                case Direction.Up:
+                    tmpDes = pos + Vector2Int.up;
+                    break;
+                case Direction.Down:
+                    tmpDes = pos + Vector2Int.down;
+                    break;
+                case Direction.Right:
+                    tmpDes = pos + Vector2Int.right;
+                    break;
+                case Direction.Left:
+                    tmpDes = pos + Vector2Int.left;
+                    break;
+                default:
+                    break;
+            }
+
+            return tmpDes;
         }
     }
 }

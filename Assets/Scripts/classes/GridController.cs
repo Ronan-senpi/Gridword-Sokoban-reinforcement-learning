@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -26,7 +27,7 @@ namespace classes
         public void MovePlayer(Vector2Int direction)
         {
             Vector2Int destination = playerPosition + direction;
-            int indexDestination = destination.y * gridSize.x + destination.x;
+            int indexDestination = destination.y * GridSize.x + destination.x;
             if (cratesPositions!= null && StepOnCrate(destination))
                 if (!CanAndMoveCrate(destination, direction))
                     return;
@@ -39,10 +40,33 @@ namespace classes
         }
 
 
-        public bool CanStepOn(int indexToMove, bool playerMovement = true)
+        public bool CanStepOn(Vector2Int pos, Direction dir)
+        {
+            Vector2Int tmpDes = pos;
+            switch (dir)
+            {
+                case Direction.Up:
+                    tmpDes = pos + Vector2Int.up;
+                    break;
+                case Direction.Down:
+                    tmpDes = pos + Vector2Int.down;
+                    break;
+                case Direction.Right:
+                    tmpDes = pos + Vector2Int.right;
+                    break;
+                case Direction.Left:
+                    tmpDes = pos + Vector2Int.left;
+                    break;
+                default:
+                    return false;
+                    break;
+            }
+            return CanStepOn(GetTile(pos), false);
+        }
+        public bool CanStepOn(int cellValue, bool playerMovement = true)
         {
             bool res;
-            switch (indexToMove)
+            switch (cellValue)
             {
                 case (int) GridType.Arrow:
                 case (int) GridType.Point:
@@ -73,6 +97,14 @@ namespace classes
 
         public bool GridChange { get; private set; }
 
+        public List<int> StartGrid
+        {
+            get
+            {
+                return startGrid;
+            }
+        }
+
         public List<int> CurrentGrid
         {
             get
@@ -83,7 +115,7 @@ namespace classes
         }
 
         private List<int> currentGrid, tmpGrid, startGrid;
-        private Vector2Int gridSize = new Vector2Int(10, 10);
+        public Vector2Int GridSize { get; private set; } = new Vector2Int(10, 10);
 
         private void InitGrid(List<int> grid)
         {
@@ -98,20 +130,20 @@ namespace classes
         /// <returns>-1 if not find</returns>
         public int GetTile(Vector2Int pos)
         {
-            if (0 > pos.y || pos.y >= gridSize.y)
+            if (0 > pos.y || pos.y >= GridSize.y)
             {
                 return -1;
             }
 
-            if (0 > pos.x || pos.x >= gridSize.x)
+            if (0 > pos.x || pos.x >= GridSize.x)
             {
                 return -1;
             }
 
-            int index = pos.y * gridSize.x + pos.x;
+            int index = pos.y * GridSize.x + pos.x;
             if (0 > index || index >= currentGrid.Count)
                 return -1;
-            return currentGrid[pos.y * gridSize.x + pos.x];
+            return currentGrid[pos.y * GridSize.x + pos.x];
         }
 
         #endregion Grid
@@ -180,6 +212,19 @@ namespace classes
             InitGrid(grid);
             this.playerPosition = playerPosition;
             this.cratesPositions = crates;
+        }
+
+        public List<Direction> GetActionFromPosition(Vector2Int pos)
+        {
+            List<Direction> dirs = new List<Direction>(); 
+            foreach (Direction dir in (Direction[]) Enum.GetValues(typeof(Direction)))
+            {
+                if (CanStepOn(pos,dir))
+                {
+                    dirs.Add(dir);
+                }
+            }
+            return dirs;
         }
     }
 }

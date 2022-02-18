@@ -14,9 +14,9 @@ namespace classes.Algo
         {
             this.Gamma = gamma;
             List<int> gridValues = grid.StartGrid;
-            for (int x = 0; x < grid.GridSize.x; x++)
+            for (int y = 0; y < grid.GridSize.y; y++)
             {
-                for (int y = 0; y < grid.GridSize.y; y++)
+                for (int x = 0; x < grid.GridSize.x; x++)
                 {
                     switch ((GridType) grid.GetTile(new Vector2Int(x, y)))
                     {

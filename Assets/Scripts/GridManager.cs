@@ -70,7 +70,6 @@ public class GridManager : MonoBehaviour
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 1
     };
     private List<Vector2Int> cratesTwo = new List<Vector2Int>()
     {
@@ -86,7 +85,7 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        gc = new GridController(gridThree, new Vector2Int(3,6));
+        gc = new GridController(gridOne, new Vector2Int(3,6));
         Instance = this;
     }
 

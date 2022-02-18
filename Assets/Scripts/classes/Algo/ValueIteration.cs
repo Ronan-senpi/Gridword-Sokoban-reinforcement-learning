@@ -26,11 +26,13 @@ namespace classes.Algo
                         case GridType.Ground:
                             states.Add(new State(0, grid.GetActionFromPosition(new Vector2Int(x, y))));
                             break;
+                        case GridType.Hole:
+                            states.Add(new State(-1, grid.GetActionFromPosition(new Vector2Int(x, y))));
+                            break;
                         case GridType.Void:
                         case GridType.Wall:
                         case GridType.Point:
                         case GridType.Crate:
-                        case GridType.Hole:
                         case GridType.Arrow:
                         case GridType.Character:
                         default:

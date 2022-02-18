@@ -61,7 +61,7 @@ namespace classes
                     return false;
                     break;
             }
-            return CanStepOn(GetTile(pos), false);
+            return CanStepOn(GetTile(tmpDes), false);
         }
         public bool CanStepOn(int cellValue, bool playerMovement = true)
         {
@@ -115,7 +115,7 @@ namespace classes
         }
 
         private List<int> currentGrid, tmpGrid, startGrid;
-        public Vector2Int GridSize { get; private set; } = new Vector2Int(10, 11);
+        public Vector2Int GridSize { get; private set; } = new Vector2Int(10, 10);
 
         private void InitGrid(List<int> grid)
         {

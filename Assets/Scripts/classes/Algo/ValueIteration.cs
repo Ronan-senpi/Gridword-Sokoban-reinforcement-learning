@@ -25,7 +25,7 @@ namespace classes.Algo
                     switch ((GridType) grid.GetTile(new Vector2Int(x, y)))
                     {
                         case GridType.Door:
-                            states.Add(new State(GridType.Door)
+                            states.Add(new State(GridType.Door, null)
                             {
                                 Reward = 1.0f
                             });
@@ -122,9 +122,11 @@ namespace classes.Algo
                     
                     if (GridType.Door == current.CellType)
                         break;
-
-                    actions.Add(current.BestAction);
-                    playerPos = GridController.GetNextPosition(playerPos, current.BestAction);
+                    if (current.BestAction.HasValue)
+                    {
+                        actions.Add(current.BestAction.Value);
+                        playerPos = GridController.GetNextPosition(playerPos, current.BestAction.Value);
+                    }
                 }
 
                 ++loopCount;
@@ -145,7 +147,7 @@ namespace classes.Algo
             public float StateValue { get; set; }
             public List<Direction> Actions { get; private set; }
 
-            public Direction BestAction { get; set; }
+            public Direction? BestAction { get; set; }
 
             public State(GridType type, List<Direction> actions = null)
             {
@@ -153,7 +155,7 @@ namespace classes.Algo
                 StateValue = 0;
                 Actions = actions;
                 Reward = 0;
-                BestAction = Direction.Up;
+                BestAction = null;
             }
 
             public float GetReward()

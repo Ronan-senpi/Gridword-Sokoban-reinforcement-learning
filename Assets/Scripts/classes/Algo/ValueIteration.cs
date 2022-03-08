@@ -21,16 +21,22 @@ namespace classes.Algo
             {
                 for (int x = 0; x < grid.GridSize.x; x++)
                 {
-                    switch ((GridType)grid.GetTile(new Vector2Int(x, y)))
+                    switch ((GridType) grid.GetTile(new Vector2Int(x, y)))
                     {
                         case GridType.Door:
-                            states.Add(new State(1));
+                            states.Add(new State()
+                            {
+                                Reward = 1.0f
+                            });
                             break;
                         case GridType.Ground:
-                            states.Add(new State(0, grid.GetActionFromPosition(new Vector2Int(x, y))));
+                            states.Add(new State(grid.GetActionFromPosition(new Vector2Int(x, y))));
                             break;
                         case GridType.Hole:
-                            states.Add(new State(-1, grid.GetActionFromPosition(new Vector2Int(x, y))));
+                            states.Add(new State(grid.GetActionFromPosition(new Vector2Int(x, y)))
+                            {
+                                Reward = -1.0f
+                            });
                             break;
                         case GridType.Void:
                         case GridType.Wall:
@@ -47,8 +53,10 @@ namespace classes.Algo
 
             #endregion
 
+            int maxLoop = 0;
             do
             {
+                maxLoop++;
                 delta = 0;
                 for (int y = 0; y < grid.GridSize.y; y++)
                 {
@@ -57,15 +65,35 @@ namespace classes.Algo
                         int stateIndex = y * grid.GridSize.x + x;
                         if (states[stateIndex] != null)
                         {
-                            float temp = states[stateIndex].StateValue;
+                            State currentPosition = states[stateIndex].Value;
                             float actionValue = 0;
-                            foreach (Direction action in states[stateIndex].Actions)
+                            if (currentPosition.Actions != null)
+                                foreach (Direction action in currentPosition.Actions)
+                                {
+                                    Vector2Int nextPos = grid.GetNextPosition(new Vector2Int(x, y), action);
+                                    int nextIndex = nextPos.y * grid.GridSize.x + nextPos.x;
+                                    if (states[nextIndex].HasValue)
+                                    {
+                                        actionValue =
+                                            Math.Max(
+                                                states[nextIndex].Value.GetReward() +
+                                                gamma * states[nextIndex].Value.StateValue, actionValue);
+                                    }
+                                }
+                            else
                             {
-                                Vector2Int nextState = grid.GetNextPosition(new Vector2Int(x, y), action);
-                                actionValue = states[nextState.y * grid.GridSize.x + nextState.x].GetReward() + gamma;
+                                actionValue = currentPosition.GetReward();
                             }
+
+                            delta = currentPosition.StateValue = actionValue;
+                            
                         }
                     }
+                }
+
+                if ( maxLoop >=10000)
+                {
+                    break;
                 }
             } while (delta < theta);
         }
@@ -76,20 +104,28 @@ namespace classes.Algo
         }
     }
 
-    public class State
+    public struct GameState
     {
-        public State(float stateValue, List<Direction> actions = null)
-        {
-            StateValue = stateValue;
-            Actions = actions;
-        }
+        public Vector2Int PlayerPos { get; set; }
+        public List<Vector2Int> CratesPos { get; set; }
+    }
 
+    public struct State
+    {
+        public float Reward { get; set; }
         public float StateValue { get; set; }
         public List<Direction> Actions { get; private set; }
 
+        public State(List<Direction> actions = null)
+        {
+            StateValue = 0;
+            Actions = actions;
+            Reward = 0;
+        }
+
         public float GetReward()
         {
-            return 0.0f;
+            return this.Reward;
         }
     }
 }

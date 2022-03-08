@@ -208,7 +208,7 @@ namespace classes
             return dirs;
         }
 
-        public Vector2Int GetNextPosition(Vector2Int pos, Direction dir)
+        public static Vector2Int GetNextPosition(Vector2Int pos, Direction dir)
         {
             Vector2Int tmpDes = pos;
             switch (dir)

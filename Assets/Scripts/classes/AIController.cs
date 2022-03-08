@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using classes.Algo;
 
 namespace classes
@@ -25,7 +26,7 @@ namespace classes
                 case ReinforcementType.Value:
                 default:
                     ValueIteration vi = new ValueIteration(grid,0.9f);
-                    vi.Compute();
+                    List<Direction> actions = vi.Compute(grid.PlayerPosition);
                     break;
             }
         }

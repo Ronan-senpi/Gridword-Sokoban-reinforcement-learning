@@ -30,7 +30,10 @@ namespace classes.Algo
                             });
                             break;
                         case GridType.Ground:
-                            states.Add(new State(grid.GetActionFromPosition(new Vector2Int(x, y))));
+                            states.Add(new State(grid.GetActionFromPosition(new Vector2Int(x, y)))
+                            {
+                                Reward = 0.0f
+                            });
                             break;
                         case GridType.Hole:
                             states.Add(new State(grid.GetActionFromPosition(new Vector2Int(x, y)))
@@ -58,6 +61,7 @@ namespace classes.Algo
             {
                 maxLoop++;
                 delta = 0;
+                //Pourquoi initialisé avant ? pour libiré de la puissance de calcule dans le do while
                 for (int y = 0; y < grid.GridSize.y; y++)
                 {
                     for (int x = 0; x < grid.GridSize.x; x++)
@@ -68,30 +72,35 @@ namespace classes.Algo
                             State currentPosition = states[stateIndex].Value;
                             float actionValue = 0;
                             if (currentPosition.Actions != null)
+                            {
                                 foreach (Direction action in currentPosition.Actions)
                                 {
                                     Vector2Int nextPos = grid.GetNextPosition(new Vector2Int(x, y), action);
                                     int nextIndex = nextPos.y * grid.GridSize.x + nextPos.x;
                                     if (states[nextIndex].HasValue)
                                     {
-                                        actionValue =
-                                            Math.Max(
-                                                states[nextIndex].Value.GetReward() +
-                                                gamma * states[nextIndex].Value.StateValue, actionValue);
+                                        float tmpStateValue = currentPosition.GetReward() +
+                                                              gamma * states[nextIndex].Value.StateValue;
+                                        if (actionValue < tmpStateValue)
+                                        {
+                                            actionValue = tmpStateValue;
+                                            currentPosition.BestAction = action;
+                                        }
                                     }
                                 }
+                            }
                             else
                             {
                                 actionValue = currentPosition.GetReward();
                             }
 
-                            delta = currentPosition.StateValue = actionValue;
-                            
+                            delta = Mathf.Max(delta, Mathf.Abs(currentPosition.StateValue - actionValue));
+                            currentPosition.StateValue = actionValue;
                         }
                     }
                 }
 
-                if ( maxLoop >=10000)
+                if (maxLoop >= 10000)
                 {
                     break;
                 }
@@ -116,11 +125,14 @@ namespace classes.Algo
         public float StateValue { get; set; }
         public List<Direction> Actions { get; private set; }
 
+        public Direction BestAction { get; set; }
+
         public State(List<Direction> actions = null)
         {
             StateValue = 0;
             Actions = actions;
             Reward = 0;
+            BestAction = Direction.Down;
         }
 
         public float GetReward()

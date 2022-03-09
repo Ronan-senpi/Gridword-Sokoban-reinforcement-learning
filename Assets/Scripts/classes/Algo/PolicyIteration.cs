@@ -33,7 +33,8 @@ namespace classes.Algo
                             float actionValue = 0;
                             if (states[stateIndex].BestAction != null)
                             {
-                                Vector2Int nextPos = GridController.GetNextPosition(new Vector2Int(x, y), states[stateIndex].BestAction);
+                                Vector2Int nextPos = GridController.GetNextPosition(new Vector2Int(x, y),
+                                    states[stateIndex].BestAction);
                                 int nextIndex = nextPos.y * grid.GridSize.x + nextPos.x;
                                 if (states[nextIndex] != null)
                                 {
@@ -62,14 +63,39 @@ namespace classes.Algo
                 }
             } while (delta > theta);
 
+
             bool stable = true;
-            foreach (State state in states)
+            for (int y = 0; y < grid.GridSize.y; y++)
             {
-                Direction temp = state.BestAction;
-                // state.BestAction = un truc
-                if (temp != state.BestAction)
+                for (int x = 0; x < grid.GridSize.x; x++)
                 {
-                    stable = false;
+                    int stateIndex = y * grid.GridSize.x + x;
+                    if (states[stateIndex] != null)
+                    {
+                        Direction temp = states[stateIndex].BestAction;
+                        float actionValue = 0;
+                        foreach (Direction action in states[stateIndex].Actions)
+                        {
+                            Vector2Int nextPos = GridController.GetNextPosition(new Vector2Int(x, y), action);
+                            int nextIndex = nextPos.y * grid.GridSize.x + nextPos.x;
+                            if (states[nextIndex] != null)
+                            {
+                                float tmpStateValue = states[nextIndex].GetReward() +
+                                                      gamma * states[nextIndex].StateValue;
+                                if (actionValue < tmpStateValue)
+                                {
+                                    actionValue = tmpStateValue;
+                                    states[stateIndex].BestAction = action;
+                                }
+                            }
+                        }
+
+                        if (states[stateIndex].BestAction != temp)
+                        {
+                            stable = false;
+                        }
+                        
+                    }
                 }
             }
 
@@ -77,8 +103,10 @@ namespace classes.Algo
             {
                 return;
             }
-
-            Evaluate(grid, gamma, theta);
+            else
+            {
+                Evaluate(grid, gamma, theta);
+            }
         }
 
 

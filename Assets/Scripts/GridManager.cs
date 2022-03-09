@@ -27,6 +27,8 @@ public class GridManager : MonoBehaviour
     [SerializeField] private GameObject characterPrefab; //6
     [SerializeField] private GameObject wallPrefab; //7
     [SerializeField] private GameObject doorPrefab; //8
+[Header("debug settings")]
+    [SerializeField] private Boolean showText = false;
     [SerializeField] private GameObject textPrefab;
     private List<int> loadedGrid;
 
@@ -60,16 +62,16 @@ public class GridManager : MonoBehaviour
 
     private List<int> gridThree = new List<int>()
     {
-        1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+        7, 1, 1, 1, 1, 7, 1, 1, 1, 7,
+        7, 1, 7, 1, 1, 1, 1, 1, 7, 7,
+        7, 1, 1, 1, 7, 7, 7, 1, 1, 7,
+        7, 1, 4, 1, 7, 1, 7, 4, 4, 7,
+        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
+        7, 1, 1, 7, 7, 7, 7, 1, 1, 7,
+        7, 7, 1, 1, 1, 1, 7, 1, 4, 7,
+        7, 1, 1, 1, 7, 8, 7, 1, 1, 7,
+        7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
     };
     private List<Vector2Int> cratesTwo = new List<Vector2Int>()
     {
@@ -85,7 +87,7 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        gc = new GridController(gridOne, new Vector2Int(5,6));
+        gc = new GridController(gridThree, new Vector2Int(8,8));
         Instance = this;
     }
 
@@ -244,9 +246,13 @@ public class GridManager : MonoBehaviour
     void InstantiateTiles(GameObject dd, Vector2 pos, SpriteLayer sl, Transform parent)
     {
         GameObject go = Instantiate(dd, pos, Quaternion.identity, parent);
-        GameObject text = Instantiate(textPrefab, pos, Quaternion.identity, go.transform);
-        TMP_Text tmp = text.GetComponent<TMP_Text>();
-        tmp.text = (pos.y * gc.GridSize.x + pos.x).ToString();
+        if (showText)
+        {
+            GameObject text = Instantiate(textPrefab, pos, Quaternion.identity, go.transform);
+            TMP_Text tmp = text.GetComponent<TMP_Text>();
+            tmp.text = (pos.y * gc.GridSize.x + pos.x).ToString();
+        }
+
         SpriteRenderer sr;
         if (!go.TryGetComponent(out sr))
         {

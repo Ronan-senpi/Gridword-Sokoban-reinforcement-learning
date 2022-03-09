@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using classes.Algo;
 using UnityEngine;
@@ -8,7 +9,6 @@ namespace classes
     public class AIController
     {
         private GridController grid;
-
         public AIController(GridController grid, ReinforcementType? type = null)
         {
             this.grid = grid;
@@ -37,7 +37,7 @@ namespace classes
                             possiblesStates.Add(
                                 new State(GridType.Hole, grid.GetActionFromPosition(new Vector2Int(x, y)))
                                 {
-                                    Reward = -1.0f
+                                    Reward = -15f
                                 });
                             break;
                         case GridType.Void:
@@ -53,6 +53,7 @@ namespace classes
                 }
             }
 
+            List<Direction> actions = new List<Direction>();
             switch (type)
             {
                 case ReinforcementType.Policy:
@@ -70,9 +71,10 @@ namespace classes
                 default:
                     ValueIteration vi = new ValueIteration(possiblesStates, grid.GridSize.x);
                     vi.Evaluate(grid, 0.9f, 0.01f);
-                    List<Direction> actions = vi.Compute(grid.PlayerPosition);
+                    actions = vi.Compute(grid.PlayerPosition);
                     break;
             }
+            AIManager.Instance.MovePlayer(actions);
         }
     }
 }

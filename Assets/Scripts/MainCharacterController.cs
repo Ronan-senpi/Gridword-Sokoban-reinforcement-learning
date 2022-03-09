@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class MainCharacterController : MonoBehaviour
 {
+    
     /// <summary>
     /// Move player on direction 
     /// </summary>
@@ -18,6 +19,9 @@ public class MainCharacterController : MonoBehaviour
     {
         GridManager.Instance.gc.MovePlayer(direction);
     }
+
+
+
 
 
     private Vector3 CapVector(Vector2Int value)

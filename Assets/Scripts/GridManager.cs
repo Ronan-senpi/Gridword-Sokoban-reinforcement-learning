@@ -85,7 +85,7 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        gc = new GridController(gridOne, new Vector2Int(3,6));
+        gc = new GridController(gridOne, new Vector2Int(5,6));
         Instance = this;
     }
 

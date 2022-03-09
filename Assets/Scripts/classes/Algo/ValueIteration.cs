@@ -6,7 +6,7 @@ namespace classes.Algo
 {
     public class ValueIteration
     {
-        public List<State?> states = new List<State?>();
+        public List<State> states = new List<State>();
         private Vector2Int gridSize;
         public float Gamma { get; private set; }
 
@@ -22,7 +22,7 @@ namespace classes.Algo
             {
                 for (int x = 0; x < grid.GridSize.x; x++)
                 {
-                    switch ((GridType) grid.GetTile(new Vector2Int(x, y)))
+                    switch ((GridType)grid.GetTile(new Vector2Int(x, y)))
                     {
                         case GridType.Door:
                             states.Add(new State(GridType.Door, null)
@@ -70,42 +70,43 @@ namespace classes.Algo
                         int stateIndex = y * grid.GridSize.x + x;
                         if (states[stateIndex] != null)
                         {
-                            State currentPosition = states[stateIndex].Value;
+                            float temp = states[stateIndex].StateValue;
                             float actionValue = 0;
-                            if (currentPosition.Actions != null)
+                            if (states[stateIndex].Actions != null)
                             {
-                                foreach (Direction action in currentPosition.Actions)
+                                foreach (Direction action in states[stateIndex].Actions)
                                 {
                                     Vector2Int nextPos = GridController.GetNextPosition(new Vector2Int(x, y), action);
                                     int nextIndex = nextPos.y * grid.GridSize.x + nextPos.x;
-                                    if (states[nextIndex].HasValue)
+                                    if (states[nextIndex] != null)
                                     {
-                                        float tmpStateValue = states[nextIndex].Value.GetReward() +
-                                                              gamma * states[nextIndex].Value.StateValue;
+                                        float tmpStateValue = states[nextIndex].GetReward() +
+                                                              gamma * states[nextIndex].StateValue;
                                         if (actionValue < tmpStateValue)
                                         {
                                             actionValue = tmpStateValue;
-                                            currentPosition.BestAction = action;
+                                            states[stateIndex].BestAction = action;
                                         }
                                     }
                                 }
                             }
                             else
                             {
-                                actionValue = currentPosition.GetReward();
+                                actionValue = states[stateIndex].GetReward();
                             }
-
-                            delta = Mathf.Max(delta, Mathf.Abs(currentPosition.StateValue - actionValue));
-                            currentPosition.StateValue = actionValue;
+                            states[stateIndex].StateValue = actionValue;
+                            delta = Mathf.Max(delta, Mathf.Abs(temp - actionValue));
                         }
                     }
                 }
 
-                if (maxLoop >= 10000)
+                if (maxLoop >= 100000)
                 {
                     break;
                 }
-            } while (delta < theta);
+            } while (delta > theta);
+
+            Debug.Log("LOOOP : " + maxLoop);
         }
 
         public List<Direction> Compute(Vector2Int playerPos)
@@ -118,8 +119,8 @@ namespace classes.Algo
                 playerIndex = playerPos.y * gridSize.x + playerPos.x;
                 if (states[playerIndex] != null)
                 {
-                    State current = states[playerIndex].Value;
-                    
+                    State current = states[playerIndex];
+
                     if (GridType.Door == current.CellType)
                         break;
                     if (current.BestAction.HasValue)
@@ -131,6 +132,7 @@ namespace classes.Algo
 
                 ++loopCount;
             } while (loopCount < 10000);
+
             return actions;
         }
 
@@ -140,7 +142,7 @@ namespace classes.Algo
             public List<Vector2Int> CratesPos { get; set; }
         }
 
-        public struct State
+        public class State
         {
             public GridType CellType { get; private set; }
             public float Reward { get; set; }

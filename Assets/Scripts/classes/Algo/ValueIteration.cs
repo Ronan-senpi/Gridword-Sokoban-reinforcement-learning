@@ -4,60 +4,19 @@ using UnityEngine;
 
 namespace classes.Algo
 {
-    public class ValueIteration
+    public class ValueIteration : DynamicProgramming
     {
-        public List<State> states = new List<State>();
-        private Vector2Int gridSize;
-        public float Gamma { get; private set; }
-
-        public ValueIteration(GridController grid, float gamma, float theta = 0.01f)
+        private int gridWidth;
+        public ValueIteration(List<State> possiblesStates, int width)
         {
-            #region Initialisation
-
-            this.Gamma = gamma;
-            float delta = 0f;
-            List<int> gridValues = grid.StartGrid;
-            this.gridSize = grid.GridSize;
-            for (int y = 0; y < grid.GridSize.y; y++)
-            {
-                for (int x = 0; x < grid.GridSize.x; x++)
-                {
-                    switch ((GridType)grid.GetTile(new Vector2Int(x, y)))
-                    {
-                        case GridType.Door:
-                            states.Add(new State(GridType.Door, null)
-                            {
-                                Reward = 1.0f
-                            });
-                            break;
-                        case GridType.Ground:
-                            states.Add(new State(GridType.Ground, grid.GetActionFromPosition(new Vector2Int(x, y)))
-                            {
-                                Reward = 0.0f
-                            });
-                            break;
-                        case GridType.Hole:
-                            states.Add(new State(GridType.Hole, grid.GetActionFromPosition(new Vector2Int(x, y)))
-                            {
-                                Reward = -1.0f
-                            });
-                            break;
-                        case GridType.Void:
-                        case GridType.Wall:
-                        case GridType.Point:
-                        case GridType.Crate:
-                        case GridType.Arrow:
-                        case GridType.Character:
-                        default:
-                            states.Add(null);
-                            break;
-                    }
-                }
-            }
-
-            #endregion
-
-            int maxLoop = 0;
+            this.states = possiblesStates;
+            this.gridWidth = width;
+        }
+        
+        public override void Evaluate(GridController grid, float gamma = 0.9f, float theta = 0.01f)
+        {
+            delta = 0f;
+            maxLoop = 0;
             do
             {
                 maxLoop++;
@@ -94,39 +53,38 @@ namespace classes.Algo
                             {
                                 actionValue = states[stateIndex].GetReward();
                             }
+
                             states[stateIndex].StateValue = actionValue;
                             delta = Mathf.Max(delta, Mathf.Abs(temp - actionValue));
                         }
                     }
                 }
 
-                if (maxLoop >= 100000)
+                if (maxLoop >= 10000)
                 {
                     break;
                 }
             } while (delta > theta);
-
-            Debug.Log("LOOOP : " + maxLoop);
         }
 
-        public List<Direction> Compute(Vector2Int playerPos)
+        public override List<Direction> Compute(Vector2Int playerPos)
         {
             List<Direction> actions = new List<Direction>();
             int playerIndex;
             int loopCount = 0;
             do
             {
-                playerIndex = playerPos.y * gridSize.x + playerPos.x;
+                playerIndex = playerPos.y * gridWidth + playerPos.x;
                 if (states[playerIndex] != null)
                 {
                     State current = states[playerIndex];
 
                     if (GridType.Door == current.CellType)
                         break;
-                    if (current.BestAction.HasValue)
+                    if (current.BestAction != null)
                     {
-                        actions.Add(current.BestAction.Value);
-                        playerPos = GridController.GetNextPosition(playerPos, current.BestAction.Value);
+                        actions.Add(current.BestAction);
+                        playerPos = GridController.GetNextPosition(playerPos, current.BestAction);
                     }
                 }
 
@@ -140,30 +98,6 @@ namespace classes.Algo
         {
             public Vector2Int PlayerPos { get; set; }
             public List<Vector2Int> CratesPos { get; set; }
-        }
-
-        public class State
-        {
-            public GridType CellType { get; private set; }
-            public float Reward { get; set; }
-            public float StateValue { get; set; }
-            public List<Direction> Actions { get; private set; }
-
-            public Direction? BestAction { get; set; }
-
-            public State(GridType type, List<Direction> actions = null)
-            {
-                CellType = type;
-                StateValue = 0;
-                Actions = actions;
-                Reward = 0;
-                BestAction = null;
-            }
-
-            public float GetReward()
-            {
-                return this.Reward;
-            }
         }
     }
 }

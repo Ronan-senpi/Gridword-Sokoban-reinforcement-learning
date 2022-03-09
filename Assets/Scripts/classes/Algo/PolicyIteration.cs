@@ -12,7 +12,6 @@ namespace classes.Algo
             {
                 state.BestAction = (Direction)Random.Range(0, 4);
             }
-         
         }
 
         public override void Evaluate(GridController grid, float gamma = 0.9f, float theta = 0.01f)
@@ -32,21 +31,17 @@ namespace classes.Algo
                         {
                             float temp = states[stateIndex].StateValue;
                             float actionValue = 0;
-                            if (states[stateIndex].Actions != null)
+                            if (states[stateIndex].BestAction != null)
                             {
-                                foreach (Direction action in states[stateIndex].Actions)
+                                Vector2Int nextPos = GridController.GetNextPosition(new Vector2Int(x, y), states[stateIndex].BestAction);
+                                int nextIndex = nextPos.y * grid.GridSize.x + nextPos.x;
+                                if (states[nextIndex] != null)
                                 {
-                                    Vector2Int nextPos = GridController.GetNextPosition(new Vector2Int(x, y), action);
-                                    int nextIndex = nextPos.y * grid.GridSize.x + nextPos.x;
-                                    if (states[nextIndex] != null)
+                                    float tmpStateValue = states[nextIndex].GetReward() +
+                                                          gamma * states[nextIndex].StateValue;
+                                    if (actionValue < tmpStateValue)
                                     {
-                                        float tmpStateValue = states[nextIndex].GetReward() +
-                                                              gamma * states[nextIndex].StateValue;
-                                        if (actionValue < tmpStateValue)
-                                        {
-                                            actionValue = tmpStateValue;
-                                            states[stateIndex].BestAction = action;
-                                        }
+                                        actionValue = tmpStateValue;
                                     }
                                 }
                             }
@@ -66,16 +61,26 @@ namespace classes.Algo
                     break;
                 }
             } while (delta > theta);
-        }
 
-        public void Improve()
-        {
             bool stable = true;
             foreach (State state in states)
             {
                 Direction temp = state.BestAction;
+                // state.BestAction = un truc
+                if (temp != state.BestAction)
+                {
+                    stable = false;
+                }
             }
+
+            if (stable)
+            {
+                return;
+            }
+
+            Evaluate(grid, gamma, theta);
         }
+
 
         public override List<Direction> Compute(Vector2Int playerPos)
         {

@@ -9,6 +9,7 @@ namespace classes
     public class AIController
     {
         private GridController grid;
+
         public AIController(GridController grid, ReinforcementType? type = null)
         {
             this.grid = grid;
@@ -57,6 +58,10 @@ namespace classes
             switch (type)
             {
                 case ReinforcementType.Policy:
+                    PolicyIteration pi = new PolicyIteration(possiblesStates, grid.GridSize.x);
+                    pi.Evaluate(grid, 0.9f, 0.01f);
+                    actions = pi.Compute(grid.PlayerPosition);
+
                     break;
                 case ReinforcementType.Sarsra:
                     break;
@@ -74,6 +79,7 @@ namespace classes
                     actions = vi.Compute(grid.PlayerPosition);
                     break;
             }
+
             AIManager.Instance.MovePlayer(actions);
         }
     }

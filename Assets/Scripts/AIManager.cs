@@ -28,7 +28,7 @@ public class AIManager : MonoBehaviour
 
     public void AIStart()
     {
-        AIController ac = new AIController(GridManager.Instance.gc, ReinforcementType.Value);
+        AIController ac = new AIController(GridManager.Instance.gc, ReinforcementType.Policy);
     }
 
     private IEnumerator MovePlayerLoop(List<Direction> actions)

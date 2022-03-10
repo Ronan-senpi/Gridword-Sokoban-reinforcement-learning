@@ -6,11 +6,10 @@ namespace classes.Algo
 {
     public class ValueIteration : DynamicProgramming
     {
-        private int gridWidth;
         public ValueIteration(List<State> possiblesStates, int width)
         {
-            this.states = possiblesStates;
-            this.gridWidth = width;
+            states = possiblesStates;
+            gridWidth = width;
         }
         
         public override void Evaluate(GridController grid, float gamma = 0.9f, float theta = 0.01f)
@@ -67,32 +66,7 @@ namespace classes.Algo
             } while (delta > theta);
         }
 
-        public override List<Direction> Compute(Vector2Int playerPos)
-        {
-            List<Direction> actions = new List<Direction>();
-            int playerIndex;
-            int loopCount = 0;
-            do
-            {
-                playerIndex = playerPos.y * gridWidth + playerPos.x;
-                if (states[playerIndex] != null)
-                {
-                    State current = states[playerIndex];
 
-                    if (GridType.Door == current.CellType)
-                        break;
-                    if (current.BestAction != null)
-                    {
-                        actions.Add(current.BestAction);
-                        playerPos = GridController.GetNextPosition(playerPos, current.BestAction);
-                    }
-                }
-
-                ++loopCount;
-            } while (loopCount < 10000);
-
-            return actions;
-        }
 
         public struct GameState
         {

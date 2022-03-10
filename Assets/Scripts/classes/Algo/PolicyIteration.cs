@@ -5,12 +5,17 @@ namespace classes.Algo
 {
     public class PolicyIteration : DynamicProgramming
     {
-        public PolicyIteration(List<State> possiblesStates)
+        public PolicyIteration(List<State> possiblesStates, int width)
         {
             states = possiblesStates;
+            gridWidth = width;
             foreach (State state in states)
             {
-                state.BestAction = (Direction)Random.Range(0, 4);
+                if (state != null)
+                {
+                    int random = Random.Range(0, 4);
+                    state.BestAction = (Direction)random;
+                }
             }
         }
 
@@ -74,18 +79,21 @@ namespace classes.Algo
                     {
                         Direction temp = states[stateIndex].BestAction;
                         float actionValue = 0;
-                        foreach (Direction action in states[stateIndex].Actions)
+                        if (states[stateIndex].Actions != null)
                         {
-                            Vector2Int nextPos = GridController.GetNextPosition(new Vector2Int(x, y), action);
-                            int nextIndex = nextPos.y * grid.GridSize.x + nextPos.x;
-                            if (states[nextIndex] != null)
+                            foreach (Direction action in states[stateIndex].Actions)
                             {
-                                float tmpStateValue = states[nextIndex].GetReward() +
-                                                      gamma * states[nextIndex].StateValue;
-                                if (actionValue < tmpStateValue)
+                                Vector2Int nextPos = GridController.GetNextPosition(new Vector2Int(x, y), action);
+                                int nextIndex = nextPos.y * grid.GridSize.x + nextPos.x;
+                                if (states[nextIndex] != null)
                                 {
-                                    actionValue = tmpStateValue;
-                                    states[stateIndex].BestAction = action;
+                                    float tmpStateValue = states[nextIndex].GetReward() +
+                                                          gamma * states[nextIndex].StateValue;
+                                    if (actionValue < tmpStateValue)
+                                    {
+                                        actionValue = tmpStateValue;
+                                        states[stateIndex].BestAction = action;
+                                    }
                                 }
                             }
                         }
@@ -94,7 +102,6 @@ namespace classes.Algo
                         {
                             stable = false;
                         }
-                        
                     }
                 }
             }
@@ -107,12 +114,6 @@ namespace classes.Algo
             {
                 Evaluate(grid, gamma, theta);
             }
-        }
-
-
-        public override List<Direction> Compute(Vector2Int playerPos)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

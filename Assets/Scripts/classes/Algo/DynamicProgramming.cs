@@ -10,14 +10,16 @@ namespace classes.Algo
     {
         protected float delta;
         protected  uint maxLoop;
-        protected List<State> states = new List<State>();
+        public List<State> states { get; protected set; } = new List<State>();
         protected int gridWidth;
+        public List<Direction> Actions { get; set; } 
 
         public abstract void Evaluate(GridController grid, float gamma = 0.9f, float theta = 0.01f);
         
-        public List<Direction> Compute(Vector2Int playerPos)
+        public void Compute(Vector2Int playerPos)
         {
-            List<Direction> actions = new List<Direction>();
+
+            Actions = new List<Direction>();
             int playerIndex;
             int loopCount = 0;
             do
@@ -31,15 +33,13 @@ namespace classes.Algo
                         break;
                     if (current.BestAction != null)
                     {
-                        actions.Add(current.BestAction);
+                        Actions.Add(current.BestAction);
                         playerPos = GridController.GetNextPosition(playerPos, current.BestAction);
                     }
                 }
 
                 ++loopCount;
             } while (loopCount < 10000);
-
-            return actions;
         }        
     }
 }

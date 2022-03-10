@@ -9,17 +9,22 @@ namespace classes
     public class AIController
     {
         private GridController grid;
+        public Vector2Int GridSize { get; protected set; }
 
-        public AIController(GridController grid, ReinforcementType? type = null)
+        public List<Direction> Actions { get; protected set; } = new List<Direction>();
+        public List<State> States { get; protected set; } = new List<State>();
+
+        public void Run(GridController grid, ReinforcementType? type = null)
         {
             this.grid = grid;
+            this.GridSize = grid.GridSize;
             List<State> possiblesStates = new List<State>();
 
             for (int y = 0; y < grid.GridSize.y; y++)
             {
                 for (int x = 0; x < grid.GridSize.x; x++)
                 {
-                    switch ((GridType)grid.GetTile(new Vector2Int(x, y)))
+                    switch ((GridType) grid.GetTile(new Vector2Int(x, y)))
                     {
                         case GridType.Door:
                             possiblesStates.Add(new State(GridType.Door, null)
@@ -54,14 +59,13 @@ namespace classes
                 }
             }
 
-            List<Direction> actions = new List<Direction>();
+            DynamicProgramming dp = null;
             switch (type)
             {
                 case ReinforcementType.Policy:
-                    PolicyIteration pi = new PolicyIteration(possiblesStates, grid.GridSize.x);
-                    pi.Evaluate(grid, 0.9f, 0.01f);
-                    actions = pi.Compute(grid.PlayerPosition);
-
+                    dp = new PolicyIteration(possiblesStates, grid.GridSize.x);
+                    dp.Evaluate(grid, 0.9f, 0.01f);
+                    dp.Compute(grid.PlayerPosition);
                     break;
                 case ReinforcementType.Sarsra:
                     break;
@@ -74,13 +78,17 @@ namespace classes
 
                 case ReinforcementType.Value:
                 default:
-                    ValueIteration vi = new ValueIteration(possiblesStates, grid.GridSize.x);
-                    vi.Evaluate(grid, 0.9f, 0.01f);
-                    actions = vi.Compute(grid.PlayerPosition);
+                    dp = new ValueIteration(possiblesStates, grid.GridSize.x);
+                    dp.Evaluate(grid, 0.9f, 0.01f);
+                    dp.Compute(grid.PlayerPosition);
                     break;
             }
 
-            AIManager.Instance.MovePlayer(actions);
+            if (dp != null)
+            {
+                States = dp.states;
+                Actions = dp.Actions;
+            }
         }
     }
 }

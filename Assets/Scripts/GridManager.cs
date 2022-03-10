@@ -89,8 +89,13 @@ public class GridManager : MonoBehaviour
 
         gc = new GridController(gridThree, new Vector2Int(8,8));
         Instance = this;
+        
     }
 
+    public void DisplayState()
+    {
+        
+    }
     void Start()
     {
         GenerateGrid(gc.CurrentGrid);
@@ -246,12 +251,12 @@ public class GridManager : MonoBehaviour
     void InstantiateTiles(GameObject dd, Vector2 pos, SpriteLayer sl, Transform parent)
     {
         GameObject go = Instantiate(dd, pos, Quaternion.identity, parent);
-        if (showText)
-        {
-            GameObject text = Instantiate(textPrefab, pos, Quaternion.identity, go.transform);
-            TMP_Text tmp = text.GetComponent<TMP_Text>();
-            tmp.text = (pos.y * gc.GridSize.x + pos.x).ToString();
-        }
+        go.transform.name = CreateCellName((int)pos.x, (int)pos.y);
+
+        GameObject text = Instantiate(textPrefab, pos, Quaternion.identity, go.transform);
+        TMP_Text tmp = text.GetComponent<TMP_Text>();
+        // tmp.text = (pos.y * gc.GridSize.x + pos.x).ToString();
+        
 
         SpriteRenderer sr;
         if (!go.TryGetComponent(out sr))
@@ -264,5 +269,22 @@ public class GridManager : MonoBehaviour
         sr.sortingOrder = (int) sl;
     }
 
+    private string CreateCellName(int x, int y)
+    {
+        return "(" + x + "," + y + ")"; 
+    }
     #endregion Private
+
+    
+    public bool TryGetTextCell(int x, int y, out TMP_Text text)
+    {
+        text = null;
+        Transform child = transform.Find(CreateCellName(x, y));
+        if (child == null)
+            return false;
+        
+        text = child.GetComponentInChildren<TMP_Text>();
+        return text != null;
+    }
+    
 }

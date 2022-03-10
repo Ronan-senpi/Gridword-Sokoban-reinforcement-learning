@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using classes;
+using TMPro;
 using UnityEngine;
 
 public class AIManager : MonoBehaviour
 {
-    [Range(0, 4)] [SerializeField] private float actionDelay = 1f;
-
+    [Range(0, 4)] [SerializeField] private float actionDelay = 0.1f;
+    private AIController ac = new AIController();
+    [SerializeField] private ReinforcementType reinforcementType = ReinforcementType.Policy;
     public static AIManager Instance { get; set; }
 
     private void Awake()
@@ -24,11 +26,6 @@ public class AIManager : MonoBehaviour
     public void MovePlayer(List<Direction> actions)
     {
         StartCoroutine(MovePlayerLoop(actions));
-    }
-
-    public void AIStart()
-    {
-        AIController ac = new AIController(GridManager.Instance.gc, ReinforcementType.Policy);
     }
 
     private IEnumerator MovePlayerLoop(List<Direction> actions)
@@ -58,4 +55,35 @@ public class AIManager : MonoBehaviour
             yield return new WaitForSeconds(actionDelay);
         }
     }
+    public void AIStart()
+    {
+        ac.Run(GridManager.Instance.gc, reinforcementType);
+    }
+
+    public void PlayActions()
+    {
+        MovePlayer(ac.Actions);
+    }
+    
+    public void DisplayStateValue()
+    {
+        List<State> states = ac.States;
+        State s;
+        for (int y = 0; y < ac.GridSize.y; y++)
+        {
+            for (int x = 0; x < ac.GridSize.x; x++)
+            {
+                s = states[y * ac.GridSize.x + x];
+                if (s != null)
+                {
+                    TMP_Text text;
+                    if (GridManager.Instance.TryGetTextCell(x, y, out text))
+                    {
+                        text.text = Math.Round(s.StateValue,2).ToString();
+                    }
+                }
+            }
+        }
+    }
+
 }

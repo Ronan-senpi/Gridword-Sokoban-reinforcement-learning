@@ -5,22 +5,37 @@ using UnityEngine;
 class DebugManagerEditor : Editor {
     public override void OnInspectorGUI() {
     
-        base.DrawDefaultInspector();
+        
+        base.OnInspectorGUI();
+        
+        AIManager ai = (AIManager) target;
         
         if (GUILayout.Button("Compute AI"))
         {
             AIManager.Instance.AIStart();
         }
-        
-        if (GUILayout.Button("Play"))
+        GUILayout.Label("(More options show up when compute is over)");
+        if (ai.ComputeIsOver)
         {
-            AIManager.Instance.PlayActions();
-        }
+            if (GUILayout.Button("Play"))
+            {
+                AIManager.Instance.PlayActions();
+            }
 
-        if (GUILayout.Button("Show state value"))
-        {
-            AIManager.Instance.DisplayStateValue();
+            if (GUILayout.Button("Show state value"))
+            {
+                AIManager.Instance.DisplayStateValue();
+            }
+
+            if (GUILayout.Button("Show all Arrows"))
+            {
+                AIManager.Instance.DisplayAllArrows();
+            }
+
+            if (GUILayout.Button("Show critical path Arrows"))
+            {
+                AIManager.Instance.DisplayCriticPath();
+            }
         }
-                
     }
 }

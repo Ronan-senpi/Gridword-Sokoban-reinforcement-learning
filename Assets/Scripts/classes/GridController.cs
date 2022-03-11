@@ -228,8 +228,29 @@ namespace classes
                 default:
                     break;
             }
-
             return tmpDes;
+        }
+
+        public static float DirectionToAngle(Direction dir)
+        {
+            float angle = 0; 
+            switch (dir)
+            {
+                case Direction.Down:
+                    angle = 180;
+                    break;
+                case Direction.Right:
+                    angle = -90;
+                    break;
+                case Direction.Left:
+                    angle = 90;
+                    break;
+                case Direction.Up:
+                default:
+                    angle = 0;
+                    break;
+            }
+            return angle;
         }
     }
 }

@@ -14,10 +14,13 @@ namespace classes
         public List<Direction> Actions { get; protected set; } = new List<Direction>();
         public List<State> States { get; protected set; } = new List<State>();
 
+        public Vector2Int PlayerStartPos { get; set; } = new Vector2Int();
+
         public void Run(GridController grid, ReinforcementType? type = null)
         {
             this.grid = grid;
             this.GridSize = grid.GridSize;
+            this.PlayerStartPos = grid.PlayerPosition;
             List<State> possiblesStates = new List<State>();
 
             for (int y = 0; y < grid.GridSize.y; y++)

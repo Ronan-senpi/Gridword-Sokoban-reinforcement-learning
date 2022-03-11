@@ -254,9 +254,9 @@ public class GridManager : MonoBehaviour
         go.transform.name = CreateCellName((int)pos.x, (int)pos.y);
 
         GameObject text = Instantiate(textPrefab, pos, Quaternion.identity, go.transform);
+        text.transform.localPosition = new Vector3(-0.36f, 0.36f);
         TMP_Text tmp = text.GetComponent<TMP_Text>();
         // tmp.text = (pos.y * gc.GridSize.x + pos.x).ToString();
-        
 
         SpriteRenderer sr;
         if (!go.TryGetComponent(out sr))

@@ -304,8 +304,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0c5d56c97822fe47b6354a0b197b00a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionDelay: 1
-  reinforcementType: 0
+  actionDelay: 0.1
+  reinforcementType: 1
 --- !u!4 &882969279
 Transform:
   m_ObjectHideFlags: 0

@@ -24,24 +24,25 @@ namespace classes
             {
                 for (int x = 0; x < grid.GridSize.x; x++)
                 {
-                    switch ((GridType) grid.GetTile(new Vector2Int(x, y)))
+                    Vector2Int playerPos = new Vector2Int(x, y);
+                    switch ((GridType)grid.GetTile(playerPos))
                     {
                         case GridType.Door:
-                            possiblesStates.Add(new State(GridType.Door, null)
+                            possiblesStates.Add(new State(GridType.Door, playerPos)
                             {
                                 Reward = 1.0f
                             });
                             break;
                         case GridType.Ground:
                             possiblesStates.Add(
-                                new State(GridType.Ground, grid.GetActionFromPosition(new Vector2Int(x, y)))
+                                new State(GridType.Ground, playerPos, null, grid.GetActionFromPosition(new Vector2Int(x, y)))
                                 {
                                     Reward = 0.0f
                                 });
                             break;
                         case GridType.Hole:
                             possiblesStates.Add(
-                                new State(GridType.Hole, grid.GetActionFromPosition(new Vector2Int(x, y)))
+                                new State(GridType.Hole, playerPos, null, grid.GetActionFromPosition(new Vector2Int(x, y)))
                                 {
                                     Reward = -15f
                                 });

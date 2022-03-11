@@ -17,9 +17,9 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Transform crateContainer;
     [SerializeField] private Transform winScreen;
 
-    [Header("Cells prefabs")] 
-    
-    [SerializeField] private GameObject groundPrefab; // 1
+    [Header("Cells prefabs")] [SerializeField]
+    private GameObject groundPrefab; // 1
+
     [SerializeField] private GameObject pointPrefab; // 2
     [SerializeField] private GameObject cratePrefab; // 3
     [SerializeField] private GameObject holePrefab; //4
@@ -27,8 +27,10 @@ public class GridManager : MonoBehaviour
     [SerializeField] private GameObject characterPrefab; //6
     [SerializeField] private GameObject wallPrefab; //7
     [SerializeField] private GameObject doorPrefab; //8
-[Header("debug settings")]
-    [SerializeField] private Boolean showText = false;
+
+    [Header("debug settings")] [SerializeField]
+    private Boolean showText = false;
+
     [SerializeField] private GameObject textPrefab;
     private List<int> loadedGrid;
 
@@ -38,8 +40,8 @@ public class GridManager : MonoBehaviour
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 7, 7, 7, 7, 7, 0, 0, 0,
-        0, 0, 7, 1, 1, 8, 7, 0, 0, 0,
-        0, 0, 7, 1, 1, 7, 7, 0, 0, 0,
+        0, 0, 7, 1, 1, 2, 7, 0, 0, 0,
+        0, 0, 7, 1, 1, 2, 7, 0, 0, 0,
         0, 0, 7, 1, 1, 1, 7, 0, 0, 0,
         0, 0, 7, 7, 7, 7, 7, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -73,10 +75,11 @@ public class GridManager : MonoBehaviour
         7, 1, 1, 1, 7, 8, 7, 1, 1, 7,
         7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
     };
+
     private List<Vector2Int> cratesTwo = new List<Vector2Int>()
     {
-        new Vector2Int(5, 5),
-        new Vector2Int(6, 6),
+        new Vector2Int(4, 5),
+        new Vector2Int(4, 4),
     };
 
     private void Awake()
@@ -87,15 +90,14 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        gc = new GridController(gridThree, new Vector2Int(8,8));
+        gc = new GridController(gridThree, new Vector2Int(8, 8), cratesTwo);
         Instance = this;
-        
     }
 
     public void DisplayState()
     {
-        
     }
+
     void Start()
     {
         GenerateGrid(gc.CurrentGrid);
@@ -104,20 +106,27 @@ public class GridManager : MonoBehaviour
         SetCameraPosition();
     }
 
-    private void GenerateCrate(List<Vector2Int> cratesPositions)
+    private bool GenerateCrate(List<Vector2Int> cratesPositions)
     {
-        if(cratesPositions == null)
-            return;
-        
+        if (cratesPositions == null)
+            return false;
+
         foreach (Transform child in crateContainer)
         {
             GameObject.Destroy(child.gameObject);
         }
 
+        bool completeCrate = true;
         foreach (Vector2Int crate in cratesPositions)
         {
             InstantiateTiles(cratePrefab, crate, SpriteLayer.Character, crateContainer);
+            if (gc.GetTile(crate) != (int)GridType.Point)
+            {
+                completeCrate = false;
+            }
         }
+
+        return completeCrate;
     }
 
     private void GeneratePlayer(Vector2Int pp)
@@ -143,7 +152,10 @@ public class GridManager : MonoBehaviour
         if (!gc.CratesChange)
             return;
 
-        GenerateCrate(gc.CratesPositions);
+        if (GenerateCrate(gc.CratesPositions))
+        {
+            gc.Win = true;
+        }
     }
 
     private void UpdateWin()
@@ -205,7 +217,7 @@ public class GridManager : MonoBehaviour
                 //gridSize.y-y parce que si non c'est instentié a l'enver ! :o
                 // -1 pour start a 0
                 // GenerateCell((GridType) cellValue, new Vector2(x, gridSize.y-y-1));
-                GenerateCell((GridType) cellValue, new Vector2(x, y));
+                GenerateCell((GridType)cellValue, new Vector2(x, y));
             }
         }
     }
@@ -266,25 +278,25 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        sr.sortingOrder = (int) sl;
+        sr.sortingOrder = (int)sl;
     }
 
     private string CreateCellName(int x, int y)
     {
-        return "(" + x + "," + y + ")"; 
+        return "(" + x + "," + y + ")";
     }
+
     #endregion Private
 
-    
+
     public bool TryGetTextCell(int x, int y, out TMP_Text text)
     {
         text = null;
         Transform child = transform.Find(CreateCellName(x, y));
         if (child == null)
             return false;
-        
+
         text = child.GetComponentInChildren<TMP_Text>();
         return text != null;
     }
-    
 }

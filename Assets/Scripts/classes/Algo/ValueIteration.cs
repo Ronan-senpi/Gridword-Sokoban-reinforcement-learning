@@ -11,7 +11,7 @@ namespace classes.Algo
             states = possiblesStates;
             gridWidth = width;
         }
-        
+
         public override void Evaluate(GridController grid, float gamma = 0.9f, float theta = 0.01f)
         {
             delta = 0f;
@@ -21,43 +21,39 @@ namespace classes.Algo
                 maxLoop++;
                 delta = 0;
                 //Pourquoi initialisé avant ? pour libiré de la puissance de calcule dans le do while
-                for (int y = 0; y < grid.GridSize.y; y++)
+                foreach (State state in states)
                 {
-                    for (int x = 0; x < grid.GridSize.x; x++)
+                    if (state != null)
                     {
-                        int stateIndex = y * grid.GridSize.x + x;
-                        if (states[stateIndex] != null)
+                        float temp = state.StateValue;
+                        float actionValue = 0;
+                        if (state.Actions != null)
                         {
-                            float temp = states[stateIndex].StateValue;
-                            float actionValue = 0;
-                            if (states[stateIndex].Actions != null)
+                            foreach (Direction action in state.Actions)
                             {
-                                foreach (Direction action in states[stateIndex].Actions)
+                                State nextState = GridController.GetNextState(state, action, states);
+                                if (nextState != null)
                                 {
-                                    Vector2Int nextPos = GridController.GetNextPosition(new Vector2Int(x, y), action);
-                                    int nextIndex = nextPos.y * grid.GridSize.x + nextPos.x;
-                                    if (states[nextIndex] != null)
+                                    float tmpStateValue = nextState.GetReward() +
+                                                          gamma * nextState.StateValue;
+                                    if (actionValue < tmpStateValue)
                                     {
-                                        float tmpStateValue = states[nextIndex].GetReward() +
-                                                              gamma * states[nextIndex].StateValue;
-                                        if (actionValue < tmpStateValue)
-                                        {
-                                            actionValue = tmpStateValue;
-                                            states[stateIndex].BestAction = action;
-                                        }
+                                        actionValue = tmpStateValue;
+                                        state.BestAction = action;
                                     }
                                 }
                             }
-                            else
-                            {
-                                actionValue = states[stateIndex].GetReward();
-                            }
-
-                            states[stateIndex].StateValue = actionValue;
-                            delta = Mathf.Max(delta, Mathf.Abs(temp - actionValue));
                         }
+                        else
+                        {
+                            actionValue = state.GetReward();
+                        }
+
+                        state.StateValue = actionValue;
+                        delta = Mathf.Max(delta, Mathf.Abs(temp - actionValue));
                     }
                 }
+
 
                 if (maxLoop >= 10000)
                 {
@@ -65,7 +61,6 @@ namespace classes.Algo
                 }
             } while (delta > theta);
         }
-
 
 
         public struct GameState

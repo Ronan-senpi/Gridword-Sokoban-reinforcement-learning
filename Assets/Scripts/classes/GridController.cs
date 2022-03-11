@@ -8,7 +8,7 @@ namespace classes
 {
     public class GridController
     {
-        public bool Win { get; private set; }
+        public bool Win { get; set; }
 
         #region Player
 
@@ -251,6 +251,26 @@ namespace classes
                     break;
             }
             return angle;
+        }
+        
+        public static State GetNextState(State currentState, Direction dir, List<State> possibleStates)
+        {
+            Vector2Int playerNextPos = GetNextPosition(currentState.PlayerInformation, dir);
+            List<Vector2Int> cratesPos = currentState.CratesInformation;
+
+            foreach (State searchNextState in possibleStates)
+            {
+                if (searchNextState != null)
+                {
+                    if (searchNextState.PlayerInformation == playerNextPos &&
+                        (cratesPos == null || searchNextState.CratesInformation == cratesPos))
+                    {
+                        return searchNextState;
+                    }
+                }
+            }
+
+            return currentState;
         }
     }
 }

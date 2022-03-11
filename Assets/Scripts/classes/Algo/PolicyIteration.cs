@@ -27,38 +27,32 @@ namespace classes.Algo
                 maxLoop++;
                 delta = 0;
                 //Pourquoi initialisé avant ? pour libiré de la puissance de calcule dans le do while
-                for (int y = 0; y < grid.GridSize.y; y++)
+                foreach (State state in states)
                 {
-                    for (int x = 0; x < grid.GridSize.x; x++)
+                    if (state != null)
                     {
-                        int stateIndex = y * grid.GridSize.x + x;
-                        if (states[stateIndex] != null)
+                        float temp = state.StateValue;
+                        float actionValue = 0;
+                        if (state.BestAction != null)
                         {
-                            float temp = states[stateIndex].StateValue;
-                            float actionValue = 0;
-                            if (states[stateIndex].BestAction != null)
+                            State nextState = GridController.GetNextState(state, state.BestAction, states);
+                            if (nextState != null)
                             {
-                                Vector2Int nextPos = GridController.GetNextPosition(new Vector2Int(x, y),
-                                    states[stateIndex].BestAction);
-                                int nextIndex = nextPos.y * grid.GridSize.x + nextPos.x;
-                                if (states[nextIndex] != null)
+                                float tmpStateValue = nextState.GetReward() +
+                                                      gamma * nextState.StateValue;
+                                if (actionValue < tmpStateValue)
                                 {
-                                    float tmpStateValue = states[nextIndex].GetReward() +
-                                                          gamma * states[nextIndex].StateValue;
-                                    if (actionValue < tmpStateValue)
-                                    {
-                                        actionValue = tmpStateValue;
-                                    }
+                                    actionValue = tmpStateValue;
                                 }
                             }
-                            else
-                            {
-                                actionValue = states[stateIndex].GetReward();
-                            }
-
-                            states[stateIndex].StateValue = actionValue;
-                            delta = Mathf.Max(delta, Mathf.Abs(temp - actionValue));
                         }
+                        else
+                        {
+                            actionValue = state.GetReward();
+                        }
+
+                        state.StateValue = actionValue;
+                        delta = Mathf.Max(delta, Mathf.Abs(temp - actionValue));
                     }
                 }
 
@@ -70,41 +64,38 @@ namespace classes.Algo
 
 
             bool stable = true;
-            for (int y = 0; y < grid.GridSize.y; y++)
+            foreach (State state in states)
             {
-                for (int x = 0; x < grid.GridSize.x; x++)
+                if (state != null)
                 {
-                    int stateIndex = y * grid.GridSize.x + x;
-                    if (states[stateIndex] != null)
+                    Direction temp = state.BestAction;
+                    float actionValue = 0;
+                    if (state.Actions != null)
                     {
-                        Direction temp = states[stateIndex].BestAction;
-                        float actionValue = 0;
-                        if (states[stateIndex].Actions != null)
+                        foreach (Direction action in state.Actions)
                         {
-                            foreach (Direction action in states[stateIndex].Actions)
+                            State nextState = GridController.GetNextState(state, action, states);
+
+                            if (nextState != null)
                             {
-                                Vector2Int nextPos = GridController.GetNextPosition(new Vector2Int(x, y), action);
-                                int nextIndex = nextPos.y * grid.GridSize.x + nextPos.x;
-                                if (states[nextIndex] != null)
+                                float tmpStateValue = nextState.GetReward() +
+                                                      gamma * nextState.StateValue;
+                                if (actionValue < tmpStateValue)
                                 {
-                                    float tmpStateValue = states[nextIndex].GetReward() +
-                                                          gamma * states[nextIndex].StateValue;
-                                    if (actionValue < tmpStateValue)
-                                    {
-                                        actionValue = tmpStateValue;
-                                        states[stateIndex].BestAction = action;
-                                    }
+                                    actionValue = tmpStateValue;
+                                    state.BestAction = action;
                                 }
                             }
                         }
+                    }
 
-                        if (states[stateIndex].BestAction != temp)
-                        {
-                            stable = false;
-                        }
+                    if (state.BestAction != temp)
+                    {
+                        stable = false;
                     }
                 }
             }
+
 
             if (stable)
             {

@@ -81,7 +81,7 @@ public class AIManager : MonoBehaviour
     public void AIStart()
     {
         computeIsOver = false;
-        ac.Run(GridManager.Instance.gc, reinforcementType);
+         ac.RunGrid(GridManager.Instance.gc, reinforcementType);
         computeIsOver = true;
     }
 

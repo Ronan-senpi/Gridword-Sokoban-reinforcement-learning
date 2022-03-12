@@ -25,6 +25,10 @@ public class AIManager : MonoBehaviour
         {
             return computeIsOver;
         }
+        set
+        {
+            computeIsOver = value;
+        }
     }
 
     [SerializeField] protected GameObject arrowPrefab;
@@ -109,7 +113,7 @@ public class AIManager : MonoBehaviour
         }
     }
 
-    private void ClearChild()
+    public void ClearChild()
     {
         for (int i = 0; i < transform.childCount; i++)
         {

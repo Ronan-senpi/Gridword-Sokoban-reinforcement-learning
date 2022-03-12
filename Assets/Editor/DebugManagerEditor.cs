@@ -4,16 +4,21 @@ using UnityEngine;
 [CustomEditor(typeof(AIManager))]
 class DebugManagerEditor : Editor {
     public override void OnInspectorGUI() {
-    
         
         base.OnInspectorGUI();
         
+        if (!Application.isPlaying)
+        {
+            GUILayout.Label("More option in play mode");
+            return;
+        }
         AIManager ai = (AIManager) target;
         
         if (GUILayout.Button("Compute AI"))
         {
             AIManager.Instance.AIStart();
         }
+        
         GUILayout.Label("(More options show up when compute is over)");
         if (ai.ComputeIsOver)
         {

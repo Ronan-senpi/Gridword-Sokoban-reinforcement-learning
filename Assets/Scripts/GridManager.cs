@@ -34,54 +34,6 @@ public class GridManager : MonoBehaviour
     [SerializeField] private GameObject textPrefab;
     private List<int> loadedGrid;
 
-    List<int> gridOne = new List<int>()
-    {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 7, 7, 7, 7, 7, 0, 0, 0,
-        0, 0, 7, 1, 1, 2, 7, 0, 0, 0,
-        0, 0, 7, 1, 1, 2, 7, 0, 0, 0,
-        0, 0, 7, 1, 1, 1, 7, 0, 0, 0,
-        0, 0, 7, 7, 7, 7, 7, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    };
-
-    List<int> gridTwo = new List<int>()
-    {
-        7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-        7, 1, 1, 1, 7, 1, 1, 8, 1, 7,
-        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
-        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
-        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
-        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
-        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
-        7, 4, 1, 1, 1, 1, 1, 1, 1, 7,
-        7, 1, 1, 1, 1, 1, 1, 1, 1, 7,
-        7, 7, 7, 7, 7, 7, 7, 7, 7, 7
-    };
-
-    private List<int> gridThree = new List<int>()
-    {
-        7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-        7, 1, 1, 1, 1, 7, 1, 1, 1, 7,
-        7, 1, 7, 1, 1, 1, 1, 1, 4, 7,
-        7, 1, 1, 1, 7, 7, 7, 1, 1, 7,
-        7, 1, 1, 1, 7, 1, 7, 4, 1, 7,
-        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
-        7, 1, 1, 7, 7, 7, 7, 1, 1, 7,
-        7, 7, 1, 1, 1, 1, 7, 1, 1, 7,
-        7, 1, 1, 1, 7, 8, 7, 1, 1, 7,
-        7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-    };
-
-    private List<Vector2Int> cratesTwo = new List<Vector2Int>()
-    {
-        new Vector2Int(4, 5),
-        new Vector2Int(4, 4),
-    };
-
     private void Awake()
     {
         if (Instance != null)
@@ -90,16 +42,19 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        gc = new GridController(gridThree, new Vector2Int(8, 8), cratesTwo);
         Instance = this;
     }
 
-    public void DisplayState()
+    public void LoadMap()
     {
-    }
-
-    void Start()
-    {
+        AIManager.Instance.ClearChild();        
+        AIManager.Instance.ComputeIsOver = false;
+        winScreen.gameObject.SetActive(false);
+        
+        LevelInfos li = LevelManager.Instance.SelectedLevel;
+        gc = new GridController(li.Grid, li.PlayerPosition, li.CratesPosition);
+        gc.Win = false;
+        
         GenerateGrid(gc.CurrentGrid);
         GeneratePlayer(gc.PlayerPosition);
         GenerateCrate(gc.CratesPositions);
@@ -141,6 +96,8 @@ public class GridManager : MonoBehaviour
 
     private void Update()
     {
+        if(gc == null)
+            return;
         UpdateGrid();
         UpdatePlayer();
         UpdateWin();
@@ -149,7 +106,7 @@ public class GridManager : MonoBehaviour
 
     private void UpdateCrate()
     {
-        if (!gc.CratesChange)
+        if (gc == null ||!gc.CratesChange)
             return;
 
         if (GenerateCrate(gc.CratesPositions))
@@ -160,7 +117,7 @@ public class GridManager : MonoBehaviour
 
     private void UpdateWin()
     {
-        if (gc.Win)
+        if (gc != null && gc.Win)
         {
             winScreen.gameObject.SetActive(true);
         }
@@ -168,7 +125,7 @@ public class GridManager : MonoBehaviour
 
     private void UpdatePlayer()
     {
-        if (!gc.PlayerChange)
+        if (gc == null ||!gc.PlayerChange)
             return;
 
         GeneratePlayer(gc.PlayerPosition);
@@ -176,7 +133,7 @@ public class GridManager : MonoBehaviour
 
     private void UpdateGrid()
     {
-        if (!gc.GridChange)
+        if (gc == null || !gc.GridChange)
             return;
 
         GenerateGrid(gc.CurrentGrid);

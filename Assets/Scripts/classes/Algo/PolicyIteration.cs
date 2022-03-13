@@ -35,7 +35,7 @@ namespace classes.Algo
                         float actionValue = 0;
                         if (state.BestAction != null)
                         {
-                            State nextState = GridController.GetNextState(state, state.BestAction, states);
+                            State nextState = grid.GetNextState(state, state.BestAction, states);
                             if (nextState != null)
                             {
                                 float tmpStateValue = nextState.GetReward() +
@@ -74,7 +74,7 @@ namespace classes.Algo
                     {
                         foreach (Direction action in state.Actions)
                         {
-                            State nextState = GridController.GetNextState(state, action, states);
+                            State nextState = grid.GetNextState(state, action, states);
 
                             if (nextState != null)
                             {

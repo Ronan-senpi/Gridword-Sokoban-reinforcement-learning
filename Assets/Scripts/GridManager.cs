@@ -40,12 +40,17 @@ public class GridManager : MonoBehaviour
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 7, 7, 7, 7, 7, 0, 0, 0,
-        0, 0, 7, 1, 1, 2, 7, 0, 0, 0,
-        0, 0, 7, 1, 1, 2, 7, 0, 0, 0,
+        0, 0, 7, 1, 1, 1, 7, 0, 0, 0,
+        0, 0, 7, 1, 1, 8, 7, 0, 0, 0,
         0, 0, 7, 1, 1, 1, 7, 0, 0, 0,
         0, 0, 7, 7, 7, 7, 7, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    };
+
+    List<int> gridOneSoko = new List<int>()
+    {
+        1, 1, 2, 1,
     };
 
     List<int> gridTwo = new List<int>()
@@ -78,8 +83,7 @@ public class GridManager : MonoBehaviour
 
     private List<Vector2Int> cratesTwo = new List<Vector2Int>()
     {
-        new Vector2Int(4, 5),
-        new Vector2Int(4, 4),
+        new Vector2Int(1, 0),
     };
 
     private void Awake()
@@ -90,7 +94,23 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        gc = new GridController(gridThree, new Vector2Int(8, 8), cratesTwo);
+
+        gc = new GridController(gridOneSoko, new Vector2Int(0, 0), cratesTwo);
+        List<Vector2Int> pointList = new List<Vector2Int>();
+        for (int y = 0; y < gc.GridSize.y; y++)
+        {
+            for (int x = 0; x < gc.GridSize.x; x++)
+            {
+                Vector2Int pointToCheck = new Vector2Int(x, y);
+                if (gc.GetTile(pointToCheck) == (int)GridType.Point)
+                {
+                    pointList.Add(pointToCheck);
+                }
+            }
+        }
+
+        gc.pointsPosition = pointList;
+
         Instance = this;
     }
 
@@ -106,27 +126,20 @@ public class GridManager : MonoBehaviour
         SetCameraPosition();
     }
 
-    private bool GenerateCrate(List<Vector2Int> cratesPositions)
+    private void GenerateCrate(List<Vector2Int> cratesPositions)
     {
         if (cratesPositions == null)
-            return false;
+            return;
 
         foreach (Transform child in crateContainer)
         {
             GameObject.Destroy(child.gameObject);
         }
 
-        bool completeCrate = true;
         foreach (Vector2Int crate in cratesPositions)
         {
             InstantiateTiles(cratePrefab, crate, SpriteLayer.Character, crateContainer);
-            if (gc.GetTile(crate) != (int)GridType.Point)
-            {
-                completeCrate = false;
-            }
         }
-
-        return completeCrate;
     }
 
     private void GeneratePlayer(Vector2Int pp)
@@ -152,10 +165,7 @@ public class GridManager : MonoBehaviour
         if (!gc.CratesChange)
             return;
 
-        if (GenerateCrate(gc.CratesPositions))
-        {
-            gc.Win = true;
-        }
+        GenerateCrate(gc.CratesPositions);
     }
 
     private void UpdateWin()

@@ -22,9 +22,9 @@ public class State
         StateValue = 0;
         Actions = actions;
         Reward = 0;
-        BestAction = Direction.Down;
+        BestAction = Direction.Stay;
     }
-
+    
     public float GetReward()
     {
         return this.Reward;

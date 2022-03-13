@@ -34,7 +34,7 @@ namespace classes.Algo
                     if (current.BestAction != null)
                     {
                         Actions.Add(current.BestAction);
-                        playerPos = GridController.GetNextPosition(playerPos, current.BestAction);
+                        playerPos = GridController.GetNextPosition(playerPos, current.BestAction, out _);
                     }
                 }
 

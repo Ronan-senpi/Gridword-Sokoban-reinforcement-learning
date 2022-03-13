@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using classes.Algo;
+using UnityEditor;
 using UnityEngine;
 
 namespace classes
@@ -99,50 +100,22 @@ namespace classes
             this.grid = grid;
             this.GridSize = grid.GridSize;
             List<State> possiblesStates = new List<State>();
-            List<Vector2Int> possibleCratePos = new List<Vector2Int>();
             for (int y = 0; y < grid.GridSize.y; y++)
             {
                 for (int x = 0; x < grid.GridSize.x; x++)
                 {
                     Vector2Int playerPos = new Vector2Int(x, y);
-                   
-                    switch ((GridType)grid.GetTile(playerPos))
+                    if ((GridType)grid.GetTile(playerPos) != GridType.Wall)
                     {
-                        case GridType.Door:
-                            possiblesStates.Add(new State(GridType.Door, playerPos)
-                            {
-                                Reward = 1.0f
-                            });
-                            break;
-                        case GridType.Ground:
-                            possiblesStates.Add(
-                                new State(GridType.Ground, playerPos, null,
-                                    grid.GetActionFromPosition(new Vector2Int(x, y)))
-                                {
-                                    Reward = 0.0f
-                                });
-                            break;
-                        case GridType.Hole:
-                            possiblesStates.Add(
-                                new State(GridType.Hole, playerPos, null,
-                                    grid.GetActionFromPosition(new Vector2Int(x, y)))
-                                {
-                                    Reward = -15f
-                                });
-                            break;
-                        case GridType.Void:
-                        case GridType.Wall:
-                        case GridType.Point:
-                        case GridType.Crate:
-                        case GridType.Arrow:
-                        case GridType.Character:
-                        default:
-                            possiblesStates.Add(null);
-                            break;
+                        List<Vector2Int> cratePos = new List<Vector2Int>();
+                        State newState = new State(GridType.Ground, playerPos, cratePos,
+                            grid.GetActionFromPosition(playerPos));
+                        possiblesStates.Add(newState);
                     }
                 }
             }
 
+            possiblesStates = GenerateCrateStates(possiblesStates, grid, grid.CratesPositions.Count);
             DynamicProgramming dp = null;
             switch (type)
             {
@@ -173,6 +146,59 @@ namespace classes
                 States = dp.states;
                 Actions = dp.Actions;
             }
+        }
+
+        public List<State> GenerateCrateStates(List<State> currentStates, GridController grid, int crateNeeded)
+        {
+            if (crateNeeded <= 0) return currentStates;
+
+            bool crateFound = false;
+            List<State> possibleCrateStates = new List<State>();
+            foreach (State state in currentStates)
+            {
+                for (int y = 0; y < grid.GridSize.y; y++)
+                {
+                    for (int x = 0; x < grid.GridSize.x; x++)
+                    {
+                        Vector2Int currentPos = new Vector2Int(x, y);
+                        GridType type = (GridType)grid.GetTile(currentPos);
+                        if (type != GridType.Wall && state.PlayerInformation != currentPos)
+                        {
+                            crateFound = false;
+                            foreach (Vector2Int crateInfo in state.CratesInformation)
+                            {
+                                if (crateInfo == currentPos)
+                                {
+                                    crateFound = true;
+                                    break;
+                                }
+                            }
+
+                            if (!crateFound)
+                            {
+                                List<Vector2Int> copyCrate = new List<Vector2Int>(state.CratesInformation);
+                                copyCrate.Add(currentPos);
+                                State newState = new State(type, state.PlayerInformation, copyCrate,
+                                    grid.GetActionFromPosition(state.PlayerInformation));
+
+                                if (grid.CheckCrateCondition(grid.pointsPosition, copyCrate))
+                                {
+                                    newState.Reward = 1;
+                                }
+                                else
+                                {
+                                    newState.Reward = 0;
+                                }
+
+
+                                possibleCrateStates.Add(newState);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return GenerateCrateStates(possibleCrateStates, grid, crateNeeded - 1);
         }
     }
 }

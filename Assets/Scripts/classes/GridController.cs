@@ -28,9 +28,13 @@ namespace classes
         {
             Vector2Int destination = playerPosition + direction;
             int indexDestination = destination.y * GridSize.x + destination.x;
-            if (cratesPositions != null && StepOnCrate(destination))
-                if (!CanAndMoveCrate(destination, direction))
+            if (cratesPositions != null && StepOnCrate(cratesPositions, destination, out _))
+                if (!CanMoveCrate(destination, direction))
                     return;
+                else
+                {
+                    MoveCrate(destination, direction);
+                }
 
 
             if (!CanStepOn(currentGrid[indexDestination]))
@@ -42,7 +46,7 @@ namespace classes
 
         public bool CanStepOn(Vector2Int pos, Direction dir)
         {
-            Vector2Int tmpDes = GetNextPosition(pos, dir);
+            Vector2Int tmpDes = GetNextPosition(pos, dir, out _);
             return CanStepOn(GetTile(tmpDes), false);
         }
 
@@ -95,7 +99,7 @@ namespace classes
         }
 
         private List<int> currentGrid, tmpGrid, startGrid;
-        public Vector2Int GridSize { get; private set; } = new Vector2Int(10, 10);
+        public Vector2Int GridSize { get; private set; } = new Vector2Int(4, 1);
 
         private void InitGrid(List<int> grid)
         {
@@ -142,9 +146,17 @@ namespace classes
             }
         }
 
-        private bool StepOnCrate(Vector2Int currentCell)
+        public List<Vector2Int> pointsPosition { get; set; }
+
+        public static bool StepOnCrate(List<Vector2Int> crates, Vector2Int currentCell, out int index)
         {
-            return cratesPositions.Any(x => x.x == currentCell.x && x.y == currentCell.y);
+            index = -1;
+            if (crates.Contains(currentCell))
+            {
+                index = crates.IndexOf(currentCell);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -153,7 +165,7 @@ namespace classes
         /// <param name="currentCell">Cell where we can found crate</param>
         /// <param name="direction">Direction of movement</param>
         /// <returns>True if can move crate and movement successed</returns>
-        private bool CanAndMoveCrate(Vector2Int currentCell, Vector2Int direction)
+        private bool CanMoveCrate(Vector2Int currentCell, Vector2Int direction)
         {
             Vector2Int crate = cratesPositions.FirstOrDefault(x => x.x == currentCell.x && x.y == currentCell.y);
             if (crate == null)
@@ -162,16 +174,43 @@ namespace classes
             Vector2Int destination = crate + direction;
             int tileInfo = GetTile(destination);
 
-            if (tileInfo == -1 || !CanStepOn(tileInfo, false))
+            if (tileInfo == -1 || !CanStepOn(tileInfo, false) || cratesPositions.Any(x => x == destination))
                 return false;
 
+
+            return true;
+        }
+
+        public void MoveCrate(Vector2Int crate, Vector2Int direction)
+        {
             if (!cratesPositions.Remove(crate))
-                return false;
+                return;
 
             crate += direction;
             cratesPositions.Add(crate);
             CratesChange = true;
-            return true;
+
+            Win = CheckCrateCondition(pointsPosition, cratesPositions);
+        }
+
+        public bool CheckCrateCondition(List<Vector2Int> points, List<Vector2Int> crates)
+        {
+            bool result = false;
+            if (points != null)
+            {
+                foreach (Vector2Int point in points)
+                {
+                    if (!crates.Contains(point))
+                    {
+                        result = false;
+                        break;
+                    }
+
+                    result = true;
+                }
+            }
+
+            return result;
         }
 
         #endregion Crate
@@ -208,34 +247,41 @@ namespace classes
             return dirs;
         }
 
-        public static Vector2Int GetNextPosition(Vector2Int pos, Direction dir)
+        public static Vector2Int GetNextPosition(Vector2Int pos, Direction dir, out Vector2Int dirVec)
         {
             Vector2Int tmpDes = pos;
+            dirVec = new Vector2Int();
             switch (dir)
             {
                 case Direction.Up:
-                    tmpDes = pos + Vector2Int.up;
+                    dirVec = Vector2Int.up;
                     break;
                 case Direction.Down:
-                    tmpDes = pos + Vector2Int.down;
+                    dirVec = Vector2Int.down;
                     break;
                 case Direction.Right:
-                    tmpDes = pos + Vector2Int.right;
+                    dirVec = Vector2Int.right;
                     break;
                 case Direction.Left:
-                    tmpDes = pos + Vector2Int.left;
+                    dirVec = Vector2Int.left;
                     break;
                 default:
                     break;
             }
 
-            return tmpDes;
+            return pos + dirVec;
         }
 
-        public static State GetNextState(State currentState, Direction dir, List<State> possibleStates)
+        public State GetNextState(State currentState, Direction dir, List<State> possibleStates)
         {
-            Vector2Int playerNextPos = GetNextPosition(currentState.PlayerInformation, dir);
+            Vector2Int playerNextPos = GetNextPosition(currentState.PlayerInformation, dir, out Vector2Int dirVec);
             List<Vector2Int> cratesPos = currentState.CratesInformation;
+
+            if (cratesPos != null && StepOnCrate(cratesPos, playerNextPos, out int index))
+            {
+                if (CanMoveCrate(playerNextPos, dirVec))
+                    cratesPos[index] = GetNextPosition(playerNextPos, dir, out _);
+            }
 
             foreach (State searchNextState in possibleStates)
             {

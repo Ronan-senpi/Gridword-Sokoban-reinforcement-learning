@@ -47,8 +47,8 @@ public class AIManager : MonoBehaviour
                 case Direction.Left:
                     vec = Vector2Int.left;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                // default:
+                //     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
 
             GridManager.Instance.gc.MovePlayer(vec);
@@ -57,7 +57,7 @@ public class AIManager : MonoBehaviour
     }
     public void AIStart()
     {
-        ac.RunGrid(GridManager.Instance.gc, reinforcementType);
+        ac.RunSokoban(GridManager.Instance.gc, reinforcementType);
     }
 
     public void PlayActions()

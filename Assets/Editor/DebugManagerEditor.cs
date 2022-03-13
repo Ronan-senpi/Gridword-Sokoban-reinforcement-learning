@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using classes;
+using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(AIManager))]
@@ -23,6 +24,12 @@ class DebugManagerEditor : Editor {
         if (GUILayout.Button("Compute AI"))
         {
             AIManager.Instance.AIStart();
+        }
+
+        bool needEpisode = ai.ReinforcementType == ReinforcementType.McEsPolicyOff;
+        if (needEpisode)
+        {
+            ai.NbEpisode = EditorGUILayout.IntSlider("Number of episodes", ai.NbEpisode, 1, 9999);
         }
         
         GUILayout.Label("(More options show up when compute is over)");

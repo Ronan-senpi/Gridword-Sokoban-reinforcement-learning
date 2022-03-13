@@ -13,13 +13,14 @@ namespace classes
 
         public List<Direction> Actions { get; protected set; } = new List<Direction>();
         public List<State> States { get; protected set; } = new List<State>();
-
-
         public Vector2Int PlayerStartPos { get; set; } = new Vector2Int();
 
-        public void RunGrid(GridController grid, ReinforcementType? type = null)
-
+        public DateTime? Start { get; set; }
+        public DateTime? End { get; set; }
+        
+        public void RunGrid(GridController grid, ReinforcementType type, int nbEpisodes)
         {
+            Start = DateTime.Now;
             this.grid = grid;
             this.GridSize = grid.GridSize;
             this.PlayerStartPos = grid.PlayerPosition;
@@ -75,13 +76,16 @@ namespace classes
                     dp.Evaluate(grid, 0.9f, 0.01f);
                     dp.Compute(grid.PlayerPosition);
                     break;
-                case ReinforcementType.Sarsra:
-                    break;
-                case ReinforcementType.MctsEs:
-                    break;
-                case ReinforcementType.MctsOn:
-                    break;
-                case ReinforcementType.MctsOff:
+                // case ReinforcementType.Sarsra:
+                //     break;
+                // case ReinforcementType.McEs:
+                //     break;
+                // case ReinforcementType.McEsPolicyOn:
+                //     break;
+                case ReinforcementType.McEsPolicyOff:
+                    dp = new MctsOff(possiblesStates, grid.GridSize.x, nbEpisodes);
+                    dp.Evaluate(grid);
+                    dp.Compute(grid.PlayerPosition);
                     break;
 
                 case ReinforcementType.Value:
@@ -97,6 +101,8 @@ namespace classes
                 States = dp.states;
                 Actions = dp.Actions;
             }
+            End = DateTime.Now;
+            Debug.Log(End-Start);
         }
 
         public void RunSokoban(GridController grid, ReinforcementType? type = null)
@@ -156,13 +162,13 @@ namespace classes
                     dp.Evaluate(grid, 0.9f, 0.01f);
                     dp.Compute(grid.PlayerPosition);
                     break;
-                case ReinforcementType.Sarsra:
+                // case ReinforcementType.Sarsra:
+                //     break;
+                // case ReinforcementType.McEs:
+                //     break;
+                // case ReinforcementType.McEsPolicyOn:
                     break;
-                case ReinforcementType.MctsEs:
-                    break;
-                case ReinforcementType.MctsOn:
-                    break;
-                case ReinforcementType.MctsOff:
+                case ReinforcementType.McEsPolicyOff:
                     break;
 
                 case ReinforcementType.Value:

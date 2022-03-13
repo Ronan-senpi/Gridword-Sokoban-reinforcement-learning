@@ -8,33 +8,28 @@ using UnityEngine;
 
 public class AIManager : MonoBehaviour
 {
-   public float ActionDelay { get; set; }= 0.1f;
-   
+    public float ActionDelay { get; set; } = 0.1f;
+
     private AIController ac = new AIController();
 
 
-    [Header("AI settings")] 
-    
-    [SerializeField] private ReinforcementType reinforcementType = ReinforcementType.Policy;
-    [ReadOnly] [SerializeField]
-    protected bool computeIsOver = false;
+    [Header("AI settings")] [SerializeField]
+    private ReinforcementType reinforcementType = ReinforcementType.Value;
+
+    public ReinforcementType ReinforcementType => reinforcementType;
+    [ReadOnly] [SerializeField] protected bool computeIsOver = false;
 
     public bool ComputeIsOver
     {
-        get
-        {
-            return computeIsOver;
-        }
-        set
-        {
-            computeIsOver = value;
-        }
+        get { return computeIsOver; }
+        set { computeIsOver = value; }
     }
 
     [SerializeField] protected GameObject arrowPrefab;
     public static AIManager Instance { get; set; }
+    public int NbEpisode { get; set; } = 1;
 
-    
+
     private void Awake()
     {
         if (Instance != null)
@@ -78,20 +73,28 @@ public class AIManager : MonoBehaviour
             yield return new WaitForSeconds(ActionDelay);
         }
     }
+
     public void AIStart()
     {
         computeIsOver = false;
-         ac.RunGrid(GridManager.Instance.gc, reinforcementType);
+        if (GameType.Instance.IsSokoban)
+        {
+            
+        }
+        else
+        {
+            ac.RunGrid(GridManager.Instance.gc, reinforcementType, NbEpisode);
+        }
+
         computeIsOver = true;
     }
 
-    
-    
+
     public void PlayActions()
     {
         MovePlayer(ac.Actions);
     }
-    
+
     public void DisplayStateValue()
     {
         List<State> states = ac.States;
@@ -106,7 +109,7 @@ public class AIManager : MonoBehaviour
                     TMP_Text text;
                     if (GridManager.Instance.TryGetTextCell(x, y, out text))
                     {
-                        text.text = Math.Round(s.StateValue,2).ToString();
+                        text.text = Math.Round(s.StateValue, 2).ToString();
                     }
                 }
             }
@@ -120,7 +123,7 @@ public class AIManager : MonoBehaviour
             GameObject.Destroy(transform.GetChild(i).gameObject);
         }
     }
-    
+
     public void DisplayAllArrows()
     {
         ClearChild();
@@ -141,7 +144,6 @@ public class AIManager : MonoBehaviour
 
     private Vector2Int GetDirVector(Direction dir)
     {
-        
         Vector2Int vec = Vector2Int.zero;
         switch (dir)
         {
@@ -161,12 +163,14 @@ public class AIManager : MonoBehaviour
 
         return vec;
     }
+
     private void InstantiateArrow(int x, int y, Direction dir)
     {
         float ArrowRotZ = GridController.DirectionToAngle(dir);
         GameObject go = Instantiate(arrowPrefab, new Vector3(x, y), Quaternion.identity, transform);
-        go.transform.Rotate(0,0,ArrowRotZ);
+        go.transform.Rotate(0, 0, ArrowRotZ);
     }
+
     public void DisplayCriticPath()
     {
         if (ac.Actions == null || ac.Actions.Count == 0)
@@ -174,11 +178,13 @@ public class AIManager : MonoBehaviour
             Debug.LogWarning("ac.Actions is empty");
             return;
         }
+
         ClearChild();
         List<State> states = ac.States;
         Vector2Int vec = ac.PlayerStartPos;
         foreach (var direction in ac.Actions)
-        {;
+        {
+            ;
             vec += GetDirVector(direction);
             State s = states[vec.y * ac.GridSize.x + vec.x];
             InstantiateArrow(vec.x, vec.y, s.BestAction);

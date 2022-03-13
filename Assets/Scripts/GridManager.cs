@@ -34,6 +34,14 @@ public class GridManager : MonoBehaviour
     [SerializeField] private GameObject textPrefab;
     private List<int> loadedGrid;
 
+    public bool LevelLoaded
+    {
+        get
+        {
+            return gc != null;
+        }
+    }
+
     private void Awake()
     {
         if (Instance != null)
@@ -44,7 +52,7 @@ public class GridManager : MonoBehaviour
 
         Instance = this;
     }
-
+    
     public void LoadMap()
     {
         AIManager.Instance.ClearChild();        

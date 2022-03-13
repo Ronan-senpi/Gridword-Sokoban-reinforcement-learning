@@ -19,7 +19,8 @@ public class LevelManager : MonoBehaviour
         Instance = this;
     }
 
-    [SerializeField] protected int LevelIndex;
+    [Range(1,3)]
+    [SerializeField] protected int LevelIndex =1;
 
     [Header("WARNING !! Edit size of any list can break the game!")] [SerializeField]
     private List<LevelInfos> levels = new List<LevelInfos>()
@@ -77,8 +78,8 @@ public class LevelManager : MonoBehaviour
     {
         get
         {
-            LevelIndex = Mathf.Clamp(LevelIndex, 0, levels.Count - 1);
-            return levels[LevelIndex];
+            LevelIndex = Mathf.Clamp(LevelIndex, 1, levels.Count);
+            return levels[LevelIndex-1];
         }
     }
 

@@ -9,7 +9,13 @@ class DebugManagerEditor : Editor {
         
         if (!Application.isPlaying)
         {
-            GUILayout.Label("More option in play mode");
+            GUILayout.Label("More options in play mode");
+            return;
+        }
+
+        if (!GridManager.Instance.LevelLoaded)
+        {
+            GUILayout.Label("More options when a level is loaded");
             return;
         }
         AIManager ai = (AIManager) target;

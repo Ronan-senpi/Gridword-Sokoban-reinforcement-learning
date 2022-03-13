@@ -30,6 +30,11 @@ namespace classes
         [ReadOnly] [SerializeField] protected Vector2Int gridSize = new Vector2Int(10,10);
 
         [ReadOnly] [SerializeField] protected List<Vector2Int> cratesPosition;
+
+        public Vector2Int GridSize
+        {
+            get => gridSize;
+        }
         
         public Vector2Int PlayerPosition
         {

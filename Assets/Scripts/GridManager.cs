@@ -58,9 +58,8 @@ public class GridManager : MonoBehaviour
         AIManager.Instance.ClearChild();        
         AIManager.Instance.ComputeIsOver = false;
         winScreen.gameObject.SetActive(false);
-        
         LevelInfos li = LevelManager.Instance.SelectedLevel;
-        gc = new GridController(li.Grid, li.PlayerPosition, li.CratesPosition);
+        gc = new GridController(li.Grid, li.PlayerPosition, li.CratesPosition, li.GridSize);
         gc.Win = false;
         
         GenerateGrid(gc.CurrentGrid);

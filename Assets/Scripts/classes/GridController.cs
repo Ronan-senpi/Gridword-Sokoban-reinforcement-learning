@@ -99,7 +99,7 @@ namespace classes
         }
 
         private List<int> currentGrid, tmpGrid, startGrid;
-        public Vector2Int GridSize { get; private set; } = new Vector2Int(4, 1);
+        public Vector2Int GridSize { get; private set; } = new Vector2Int(10, 10);
 
         private void InitGrid(List<int> grid)
         {
@@ -226,11 +226,12 @@ namespace classes
             InitGrid(grid);
         }
 
-        public GridController(List<int> grid, Vector2Int playerPosition, List<Vector2Int> crates)
+        public GridController(List<int> grid, Vector2Int playerPosition, List<Vector2Int> crates, Vector2Int gridSize)
         {
             InitGrid(grid);
             this.playerPosition = playerPosition;
             this.cratesPositions = crates;
+            this.GridSize = gridSize;
         }
 
         public List<Direction> GetActionFromPosition(Vector2Int pos)

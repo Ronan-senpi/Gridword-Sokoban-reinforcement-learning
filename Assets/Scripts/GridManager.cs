@@ -34,57 +34,13 @@ public class GridManager : MonoBehaviour
     [SerializeField] private GameObject textPrefab;
     private List<int> loadedGrid;
 
-    List<int> gridOne = new List<int>()
+    public bool LevelLoaded
     {
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 7, 7, 7, 7, 7, 0, 0, 0,
-        0, 0, 7, 1, 1, 1, 7, 0, 0, 0,
-        0, 0, 7, 1, 1, 8, 7, 0, 0, 0,
-        0, 0, 7, 1, 1, 1, 7, 0, 0, 0,
-        0, 0, 7, 7, 7, 7, 7, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    };
-
-    List<int> gridOneSoko = new List<int>()
-    {
-        1, 1, 2, 1,
-    };
-
-    List<int> gridTwo = new List<int>()
-    {
-        7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-        7, 1, 1, 1, 7, 1, 1, 8, 1, 7,
-        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
-        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
-        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
-        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
-        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
-        7, 4, 1, 1, 1, 1, 1, 1, 1, 7,
-        7, 1, 1, 1, 1, 1, 1, 1, 1, 7,
-        7, 7, 7, 7, 7, 7, 7, 7, 7, 7
-    };
-
-    private List<int> gridThree = new List<int>()
-    {
-        7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-        7, 1, 1, 1, 1, 7, 1, 1, 1, 7,
-        7, 1, 7, 1, 1, 1, 1, 1, 4, 7,
-        7, 1, 1, 1, 7, 7, 7, 1, 1, 7,
-        7, 1, 1, 1, 7, 1, 7, 4, 1, 7,
-        7, 1, 1, 1, 7, 1, 1, 1, 1, 7,
-        7, 1, 1, 7, 7, 7, 7, 1, 1, 7,
-        7, 7, 1, 1, 1, 1, 7, 1, 1, 7,
-        7, 1, 1, 1, 7, 8, 7, 1, 1, 7,
-        7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-    };
-
-    private List<Vector2Int> cratesTwo = new List<Vector2Int>()
-    {
-        new Vector2Int(1, 0),
-    };
+        get
+        {
+            return gc != null;
+        }
+    }
 
     private void Awake()
     {
@@ -94,32 +50,19 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-
-        gc = new GridController(gridOneSoko, new Vector2Int(0, 0), cratesTwo);
-        List<Vector2Int> pointList = new List<Vector2Int>();
-        for (int y = 0; y < gc.GridSize.y; y++)
-        {
-            for (int x = 0; x < gc.GridSize.x; x++)
-            {
-                Vector2Int pointToCheck = new Vector2Int(x, y);
-                if (gc.GetTile(pointToCheck) == (int)GridType.Point)
-                {
-                    pointList.Add(pointToCheck);
-                }
-            }
-        }
-
-        gc.pointsPosition = pointList;
-
         Instance = this;
     }
-
-    public void DisplayState()
+    
+    public void LoadMap()
     {
-    }
-
-    void Start()
-    {
+        AIManager.Instance.ClearChild();        
+        AIManager.Instance.ComputeIsOver = false;
+        winScreen.gameObject.SetActive(false);
+        
+        LevelInfos li = LevelManager.Instance.SelectedLevel;
+        gc = new GridController(li.Grid, li.PlayerPosition, li.CratesPosition);
+        gc.Win = false;
+        
         GenerateGrid(gc.CurrentGrid);
         GeneratePlayer(gc.PlayerPosition);
         GenerateCrate(gc.CratesPositions);
@@ -154,6 +97,8 @@ public class GridManager : MonoBehaviour
 
     private void Update()
     {
+        if(gc == null)
+            return;
         UpdateGrid();
         UpdatePlayer();
         UpdateWin();
@@ -162,7 +107,7 @@ public class GridManager : MonoBehaviour
 
     private void UpdateCrate()
     {
-        if (!gc.CratesChange)
+        if (gc == null ||!gc.CratesChange)
             return;
 
         GenerateCrate(gc.CratesPositions);
@@ -170,7 +115,7 @@ public class GridManager : MonoBehaviour
 
     private void UpdateWin()
     {
-        if (gc.Win)
+        if (gc != null && gc.Win)
         {
             winScreen.gameObject.SetActive(true);
         }
@@ -178,7 +123,7 @@ public class GridManager : MonoBehaviour
 
     private void UpdatePlayer()
     {
-        if (!gc.PlayerChange)
+        if (gc == null ||!gc.PlayerChange)
             return;
 
         GeneratePlayer(gc.PlayerPosition);
@@ -186,7 +131,7 @@ public class GridManager : MonoBehaviour
 
     private void UpdateGrid()
     {
-        if (!gc.GridChange)
+        if (gc == null || !gc.GridChange)
             return;
 
         GenerateGrid(gc.CurrentGrid);

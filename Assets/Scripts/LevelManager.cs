@@ -6,11 +6,12 @@ using UnityEditor;
 using UnityEngine;
 
 public class LevelManager : MonoBehaviour
-{    
+{
     [Range(1, 3)] [SerializeField] protected int LevelIndex = 1;
 
     [Header("WARNING !! Edit size of any list can break the game!")] [SerializeField]
     private List<LevelInfos> levels = new List<LevelInfos>();
+
     public static LevelManager Instance { get; set; }
 
     private void Awake()
@@ -24,6 +25,16 @@ public class LevelManager : MonoBehaviour
         Instance = this;
         if (GameType.Instance.IsSokoban)
         {
+            this.levels = new List<LevelInfos>()
+            {
+                new LevelInfos(new Vector2Int(0, 0),
+                    new List<int>()
+                    {
+                        1, 1, 2, 1,
+                    },
+                    new Vector2Int(4, 1),
+                    new List<Vector2Int>() { new Vector2Int(1, 0) })
+            };
         }
         else
         {
@@ -56,12 +67,8 @@ public class LevelManager : MonoBehaviour
                         7, 4, 1, 1, 1, 1, 1, 1, 1, 7,
                         7, 1, 1, 1, 1, 1, 1, 1, 1, 7,
                         7, 7, 7, 7, 7, 7, 7, 7, 7, 7
-                    },
-                    new List<Vector2Int>()
-                    {
-                        new Vector2Int(4, 5),
-                        new Vector2Int(4, 4),
                     }),
+                
                 new LevelInfos(new Vector2Int(8, 8),
                     new List<int>()
                     {
@@ -79,7 +86,6 @@ public class LevelManager : MonoBehaviour
             };
         }
     }
-
 
 
     public LevelInfos SelectedLevel

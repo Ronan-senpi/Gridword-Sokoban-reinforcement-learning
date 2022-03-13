@@ -38,7 +38,7 @@ namespace classes.Algo
                         {
                             foreach (Direction action in state.Actions)
                             {
-                                State nextState = GridController.GetNextState(state, action, states);
+                                State nextState = grid.GetNextState(state, action, states);
                                 if (nextState != null)
                                 {
                                     float tmpStateValue = nextState.GetReward() +

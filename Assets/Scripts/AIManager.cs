@@ -96,6 +96,11 @@ public class AIManager : MonoBehaviour
         MovePlayer(ac.Actions);
     }
 
+    public TimeSpan GetExecuteTime()
+    {
+        return ac.Span.Value;
+    }
+    
     public void DisplayStateValue()
     {
         List<State> states = ac.States;

@@ -18,7 +18,8 @@ namespace classes
 
         public DateTime? Start { get; set; }
         public DateTime? End { get; set; }
-        
+        public TimeSpan? Span { get; set; }
+
         public void RunGrid(GridController grid, ReinforcementType type, int nbEpisodes)
         {
             Start = DateTime.Now;
@@ -32,7 +33,7 @@ namespace classes
                 for (int x = 0; x < grid.GridSize.x; x++)
                 {
                     Vector2Int playerPos = new Vector2Int(x, y);
-                    switch ((GridType)grid.GetTile(playerPos))
+                    switch ((GridType) grid.GetTile(playerPos))
                     {
                         case GridType.Door:
                             possiblesStates.Add(new State(GridType.Door, playerPos)
@@ -102,8 +103,9 @@ namespace classes
                 States = dp.states;
                 Actions = dp.Actions;
             }
+
             End = DateTime.Now;
-            Debug.Log(End-Start);
+            Span = End - Start;
         }
 
         public void RunSokoban(GridController grid, ReinforcementType? type = null)
@@ -116,7 +118,7 @@ namespace classes
                 for (int x = 0; x < grid.GridSize.x; x++)
                 {
                     Vector2Int playerPos = new Vector2Int(x, y);
-                    if ((GridType)grid.GetTile(playerPos) != GridType.Wall)
+                    if ((GridType) grid.GetTile(playerPos) != GridType.Wall)
                     {
                         List<Vector2Int> cratePos = new List<Vector2Int>();
                         State newState = new State(GridType.Ground, playerPos, cratePos,
@@ -135,11 +137,11 @@ namespace classes
                     dp.Evaluate(grid, 0.9f, 0.01f);
                     dp.Compute(grid.PlayerPosition);
                     break;
-                // case ReinforcementType.Sarsra:
-                //     break;
-                // case ReinforcementType.McEs:
-                //     break;
-                // case ReinforcementType.McEsPolicyOn:
+                    // case ReinforcementType.Sarsra:
+                    //     break;
+                    // case ReinforcementType.McEs:
+                    //     break;
+                    // case ReinforcementType.McEsPolicyOn:
                     break;
                 case ReinforcementType.McEsPolicyOff:
                     break;
@@ -172,7 +174,7 @@ namespace classes
                     for (int x = 0; x < grid.GridSize.x; x++)
                     {
                         Vector2Int currentPos = new Vector2Int(x, y);
-                        GridType type = (GridType)grid.GetTile(currentPos);
+                        GridType type = (GridType) grid.GetTile(currentPos);
                         if (type != GridType.Wall && state.PlayerInformation != currentPos)
                         {
                             crateFound = false;

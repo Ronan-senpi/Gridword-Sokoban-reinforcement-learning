@@ -1,53 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace classes
 {
+    [System.Serializable]
     public class Stats
     {
-        public List<TimeSpan> ExecutionTimes { get; private set; } = new List<TimeSpan>();
+        public Stats(int level)
+        {
+            this.level = level;
+        }
+
+        private int level;
+        private List<TimeSpan> executionTimes = new List<TimeSpan>();
 
         public TimeSpan MinExecutionTime
         {
-            get { return ExecutionTimes.Min(); }
+            get { return executionTimes.Min(); }
         }
 
         public TimeSpan MaxExecutionTime
         {
-            get { return ExecutionTimes.Max(); }
+            get { return executionTimes.Max(); }
         }
 
         public TimeSpan AverageExecutionTime
         {
-            get { return new TimeSpan(Convert.ToInt64(ExecutionTimes.Average(t => t.Ticks))); }
+            get { return new TimeSpan(Convert.ToInt64(executionTimes.Average(t => t.Ticks))); }
         }
 
         public int NbExecution
         {
-            get { return ExecutionTimes.Count; }
+            get { return executionTimes.Count; }
         }
 
         public void AddTime(TimeSpan execTime)
         {
-            ExecutionTimes.Add(execTime);
+            executionTimes.Add(execTime);
         }
-
-        public async void Write()
+        
+        public void Write()
         {
             List<string> lines = new List<string>();
+            lines.Add("============== Start ==============");
+            lines.Add(string.Join(" ", "level : ", level));
             lines.Add(string.Join(" ", nameof(MaxExecutionTime), MaxExecutionTime));
             lines.Add(string.Join(" ", nameof(MinExecutionTime), MinExecutionTime));
             lines.Add(string.Join(" ", nameof(MaxExecutionTime), MaxExecutionTime));
             lines.Add(string.Join(" ", nameof(AverageExecutionTime), AverageExecutionTime));
             string allLine = string.Empty;
-            foreach (var sp in ExecutionTimes)
+            foreach (var sp in executionTimes)
             {
                 allLine += sp.ToString() + ";";
             }
+            lines.Add("AllExecutionTime : " + allLine);
+            lines.Add("============== End ==============");
 
-            lines.Add("AllExecutionTime");
-            System.IO.File.WriteAllLines(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + ".txt", lines);
+           // System.IO.File.WriteAllLines(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + ".txt", lines);
+        }
+
+        public void ToJson()
+        {
+            string json = JsonUtility.ToJson(this);
+            string path = Application.persistentDataPath + "/" + DateTime.Now.ToString("MM-dd-yyyy-HH-mm") + ".json";
+            Debug.Log(path);
+            System.IO.File.WriteAllText(path, json);
         }
     }
 }

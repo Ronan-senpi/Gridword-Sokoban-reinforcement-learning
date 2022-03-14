@@ -9,7 +9,13 @@ public class LevelManager : MonoBehaviour
 {
     [Range(1, 3)] [SerializeField] protected int LevelIndex = 1;
 
-    [Header("WARNING !! Edit size of any list can break the game!")] [SerializeField]
+    public int GetLevelIndex()
+    {
+        return LevelIndex;
+    }
+    [Header("WARNING !! Edit size of any list can break the game!")] 
+    
+    [SerializeField]
     private List<LevelInfos> levels = new List<LevelInfos>();
 
     public static LevelManager Instance { get; set; }

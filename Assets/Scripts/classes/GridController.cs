@@ -156,6 +156,7 @@ namespace classes
                 index = crates.IndexOf(currentCell);
                 return true;
             }
+
             return false;
         }
 
@@ -230,7 +231,7 @@ namespace classes
         {
             InitGrid(grid);
             this.playerPosition = playerPosition;
-            this.cratesPositions = crates;
+            this.cratesPositions = new List<Vector2Int>(crates);
             this.GridSize = gridSize;
         }
 
@@ -269,17 +270,15 @@ namespace classes
                 default:
                     break;
             }
+
             return pos + dirVec;
         }
 
 
-
-  
-        
         public State GetNextState(State currentState, Direction dir, List<State> possibleStates)
         {
             Vector2Int playerNextPos = GetNextPosition(currentState.PlayerInformation, dir, out Vector2Int dirVec);
-            List<Vector2Int> cratesPos = currentState.CratesInformation;
+            List<Vector2Int> cratesPos = new List<Vector2Int>(currentState.CratesInformation);
 
             if (cratesPos != null && StepOnCrate(cratesPos, playerNextPos, out int index))
             {
@@ -291,10 +290,12 @@ namespace classes
             {
                 if (searchNextState != null)
                 {
-                    if (searchNextState.PlayerInformation == playerNextPos &&
-                        (cratesPos == null || searchNextState.CratesInformation == cratesPos))
+                    if (searchNextState.PlayerInformation == playerNextPos)
                     {
-                        return searchNextState;
+                        if (cratesPos == null || CompareTwoListOfVector2(searchNextState.CratesInformation, cratesPos))
+                        {
+                            return searchNextState;
+                        }
                     }
                 }
             }
@@ -302,9 +303,27 @@ namespace classes
             return currentState;
         }
 
+        public bool CompareTwoListOfVector2(List<Vector2Int> list1, List<Vector2Int> list2)
+        {
+            if (list1.Count != list2.Count)
+            {
+                return false;
+            }
+
+            foreach (Vector2Int vec in list1)
+            {
+                if (!list2.Contains(vec))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public static float DirectionToAngle(Direction dir)
         {
-            float angle = 0; 
+            float angle = 0;
             switch (dir)
             {
                 case Direction.Down:
@@ -321,6 +340,7 @@ namespace classes
                     angle = 0;
                     break;
             }
+
             return angle;
         }
     }

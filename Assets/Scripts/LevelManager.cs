@@ -54,6 +54,20 @@ public class LevelManager : MonoBehaviour
                     {
                         //  new Vector2Int(2, 0),
                         new Vector2Int(1, 2)
+                    }),
+                new LevelInfos(new Vector2Int(0, 0),
+                    new List<int>()
+                    {
+                        1, 1, 2, 1,
+                        1, 1, 1, 1,
+                        1, 1, 2, 1
+                    },
+                    new Vector2Int(4, 3),
+                    new List<Vector2Int>()
+                    {
+                        //  new Vector2Int(2, 0),
+                        new Vector2Int(1, 0),
+                        new Vector2Int(1, 1)
                     })
             };
         }
@@ -63,7 +77,7 @@ public class LevelManager : MonoBehaviour
             {
                 new LevelInfos(new Vector2Int(1, 1),
                     new List<int>()
-                    {                    
+                    {
                         7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
                         7, 1, 1, 1, 7, 1, 1, 8, 1, 7,
                         7, 1, 1, 1, 7, 1, 1, 1, 1, 7,

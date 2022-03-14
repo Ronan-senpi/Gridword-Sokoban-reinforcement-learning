@@ -29,6 +29,7 @@ namespace classes
             MinExecutionTime = executionTimes.Min().ToString();
             MaxExecutionTime = executionTimes.Max().ToString();
             AverageExecutionTime = new TimeSpan(Convert.ToInt64(executionTimes.Average(t => t.Ticks))).ToString();
+            TotalExecutionTime =new TimeSpan(Convert.ToInt64(executionTimes.Sum(t => t.Ticks))).ToString();
             NbExecution = executionTimes.Count;
         }
 

@@ -60,6 +60,23 @@ public class GridManager : MonoBehaviour
         winScreen.gameObject.SetActive(false);
         LevelInfos li = LevelManager.Instance.SelectedLevel;
         gc = new GridController(li.Grid, li.PlayerPosition, li.CratesPosition, li.GridSize);
+        if (GameType.Instance.IsSokoban)
+        {
+            List<Vector2Int> pointList = new List<Vector2Int>();
+            for (int y = 0; y < gc.GridSize.y; y++)
+            {
+                for (int x = 0; x < gc.GridSize.x; x++)
+                {
+                    Vector2Int pointToCheck = new Vector2Int(x, y);
+                    if (gc.GetTile(pointToCheck) == (int)GridType.Point)
+                    {
+                        pointList.Add(pointToCheck);
+                    }
+                }
+            }
+
+            gc.pointsPosition = pointList;
+        }
         gc.Win = false;
         
         GenerateGrid(gc.CurrentGrid);

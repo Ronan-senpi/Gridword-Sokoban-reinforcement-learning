@@ -6,9 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="153189f3-f843-44a8-af03-e20bf390d13f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.reinforcement-learning/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.reinforcement-learning/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/GridWorld.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/GridWorld.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GridManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GridManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AIManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/AIManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/classes/GridController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/classes/GridController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,19 +27,9 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/695d1cc93cca45069c528c15c9fdd7493e2800/36/02b85da6/List`1.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Destroyable.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/351e49e2a5bf4fd6beabb458ce2255f3ff600/ca/7363510e/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Destroyable.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="25C4iN5C7BZFLJKNCFVLGAHzlY4" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -73,10 +63,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="15704">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="15704" />
+      <option name="pid" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -95,6 +85,7 @@
       <workItem from="1645017880241" duration="6003000" />
       <workItem from="1645024759915" duration="7102000" />
       <workItem from="1645083736990" duration="21844000" />
+      <workItem from="1647244075862" duration="370000" />
     </task>
     <servers />
   </component>
@@ -125,7 +116,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Scripts/classes/GridController.cs</url>
-          <line>150</line>
+          <line>175</line>
           <properties documentPath="C:\Projects\ESGI S2\reinforcement-learning\Assets\Scripts\classes\GridController.cs" initialLine="152" containingFunctionPresentation="method 'CanAndMoveCrate'">
             <startOffsets>
               <option value="4274" />
@@ -138,7 +129,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Scripts/classes/GridController.cs</url>
-          <line>144</line>
+          <line>169</line>
           <properties documentPath="C:\Projects\ESGI S2\reinforcement-learning\Assets\Scripts\classes\GridController.cs" initialLine="146" containingFunctionPresentation="method 'CanAndMoveCrate'">
             <startOffsets>
               <option value="4028" />

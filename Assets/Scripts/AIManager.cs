@@ -8,7 +8,14 @@ using UnityEngine;
 
 public class AIManager : MonoBehaviour
 {
-    public float ActionDelay { get; set; } = 0.1f;
+    [Range(0.01f,2)]
+    [SerializeField]
+    float actionDelay  = 0.1f;
+    public float ActionDelay
+    {
+        get => actionDelay;
+        
+    }
 
     private AIController ac = new AIController();
 

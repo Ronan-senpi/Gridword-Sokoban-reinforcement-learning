@@ -55,19 +55,19 @@ namespace classes
             bool res;
             switch (cellValue)
             {
-                case (int)GridType.Arrow:
-                case (int)GridType.Point:
-                case (int)GridType.Hole:
-                case (int)GridType.Ground:
+                case (int) GridType.Arrow:
+                case (int) GridType.Point:
+                case (int) GridType.Hole:
+                case (int) GridType.Ground:
                     res = true;
                     break;
-                case (int)GridType.Door:
+                case (int) GridType.Door:
                     if (playerMovement)
                         Win = true;
                     res = true;
                     break;
-                case (int)GridType.Wall:
-                case (int)GridType.Void:
+                case (int) GridType.Wall:
+                case (int) GridType.Void:
                     res = false;
                     break;
                 default:
@@ -231,14 +231,15 @@ namespace classes
         {
             InitGrid(grid);
             this.playerPosition = playerPosition;
-            this.cratesPositions = new List<Vector2Int>(crates);
+            if (crates != null && crates.Count > 0)
+                this.cratesPositions = new List<Vector2Int>(crates);
             this.GridSize = gridSize;
         }
 
         public List<Direction> GetActionFromPosition(Vector2Int pos)
         {
             List<Direction> dirs = new List<Direction>();
-            foreach (Direction dir in (Direction[])Enum.GetValues(typeof(Direction)))
+            foreach (Direction dir in (Direction[]) Enum.GetValues(typeof(Direction)))
             {
                 if (CanStepOn(pos, dir))
                 {
@@ -278,7 +279,9 @@ namespace classes
         public State GetNextState(State currentState, Direction dir, List<State> possibleStates)
         {
             Vector2Int playerNextPos = GetNextPosition(currentState.PlayerInformation, dir, out Vector2Int dirVec);
-            List<Vector2Int> cratesPos = new List<Vector2Int>(currentState.CratesInformation);
+            List<Vector2Int> cratesPos = null;
+            if (currentState.CratesInformation != null)
+                cratesPos = new List<Vector2Int>(currentState.CratesInformation);
 
             if (cratesPos != null && StepOnCrate(cratesPos, playerNextPos, out int index))
             {

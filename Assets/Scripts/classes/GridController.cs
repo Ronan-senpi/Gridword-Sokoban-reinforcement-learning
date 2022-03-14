@@ -55,19 +55,19 @@ namespace classes
             bool res;
             switch (cellValue)
             {
-                case (int) GridType.Arrow:
-                case (int) GridType.Point:
-                case (int) GridType.Hole:
-                case (int) GridType.Ground:
+                case (int)GridType.Arrow:
+                case (int)GridType.Point:
+                case (int)GridType.Hole:
+                case (int)GridType.Ground:
                     res = true;
                     break;
-                case (int) GridType.Door:
+                case (int)GridType.Door:
                     if (playerMovement)
                         Win = true;
                     res = true;
                     break;
-                case (int) GridType.Wall:
-                case (int) GridType.Void:
+                case (int)GridType.Wall:
+                case (int)GridType.Void:
                     res = false;
                     break;
                 default:
@@ -191,15 +191,15 @@ namespace classes
             cratesPositions.Add(crate);
             CratesChange = true;
 
-            Win = CheckCrateCondition(pointsPosition, cratesPositions);
+            Win = CheckCrateCondition(cratesPositions);
         }
 
-        public bool CheckCrateCondition(List<Vector2Int> points, List<Vector2Int> crates)
+        public bool CheckCrateCondition(List<Vector2Int> crates)
         {
             bool result = false;
-            if (points != null)
+            if (pointsPosition != null)
             {
-                foreach (Vector2Int point in points)
+                foreach (Vector2Int point in pointsPosition)
                 {
                     if (!crates.Contains(point))
                     {
@@ -212,6 +212,18 @@ namespace classes
             }
 
             return result;
+        }
+
+        public int GetNumberOfCorrectCrates(List<Vector2Int> crates)
+        {
+            int count = 0;
+            foreach (Vector2Int point in pointsPosition)
+            {
+                if (crates.Contains(point))
+                    count++;
+            }
+
+            return count;
         }
 
         #endregion Crate
@@ -239,7 +251,7 @@ namespace classes
         public List<Direction> GetActionFromPosition(Vector2Int pos)
         {
             List<Direction> dirs = new List<Direction>();
-            foreach (Direction dir in (Direction[]) Enum.GetValues(typeof(Direction)))
+            foreach (Direction dir in (Direction[])Enum.GetValues(typeof(Direction)))
             {
                 if (CanStepOn(pos, dir))
                 {
@@ -275,13 +287,20 @@ namespace classes
             return pos + dirVec;
         }
 
+
         public State GetState(List<State> states, Vector2Int playerPos, List<Vector2Int> cratePos)
         {
-            return states.FirstOrDefault(state => state.PlayerInformation == playerPos && CompareTwoListOfVector2(cratePos, state.CratesInformation));
+            if (GameType.Instance.IsSokoban)
+            {
+                return states.FirstOrDefault(state =>
+                    state.PlayerInformation == playerPos && CompareTwoListOfVector2(cratePos, state.CratesInformation));
+            }
+
+            return states.FirstOrDefault(state =>
+                state != null && state.PlayerInformation == playerPos);
         }
-        
-        
-        
+
+
         public State GetNextState(State currentState, Direction dir, List<State> possibleStates)
         {
             Vector2Int playerNextPos = GetNextPosition(currentState.PlayerInformation, dir, out Vector2Int dirVec);

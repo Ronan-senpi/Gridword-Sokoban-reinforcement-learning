@@ -9,45 +9,29 @@ namespace classes.Algo
     public abstract class DynamicProgramming
     {
         protected float delta;
-        protected  uint maxLoop;
+        protected uint maxLoop;
         public List<State> states { get; protected set; } = new List<State>();
         protected int gridWidth;
         public List<Direction> Actions { get; set; }
 
         protected GridController grid;
-        
+
         public abstract void Evaluate(GridController grid, float gamma = 0.9f, float theta = 0.01f);
-        
-        public void Compute(Vector2Int playerPos)
+
+       
+        public void Compute(Vector2Int playerPos, List<Vector2Int> cratePos = null)
         {
             Actions = new List<Direction>();
-            int playerIndex;
-            int loopCount = 0;
-            do
+            State stateToCheck;
+            List<Vector2Int> crateCopy = null;
+            if (cratePos != null)
             {
-                playerIndex = playerPos.y * gridWidth + playerPos.x;
-                if (states[playerIndex] != null)
-                {
-                    State current = states[playerIndex];
+                crateCopy = new List<Vector2Int>(cratePos);
+            }
 
-                    if (current.Victory(grid))
-                        break;
-                    if (current.BestAction != null)
-                    {
-                        Actions.Add(current.BestAction);
-                        playerPos = GridController.GetNextPosition(playerPos, current.BestAction, out _);
-                    }
-                }
+            stateToCheck = grid.GetState(states, playerPos, crateCopy);
 
-                ++loopCount;
-            } while (loopCount < 10000);
-        }        
-        
-        public void ComputeSokoban(Vector2Int playerPos, List<Vector2Int> cratePos)
-        {
-            Actions = new List<Direction>();
-            List<Vector2Int> crateCopy = new List<Vector2Int>(cratePos);
-            State stateToCheck = grid.GetState(states,playerPos, crateCopy);
+
             int loopCount = 0;
             do
             {
@@ -67,17 +51,12 @@ namespace classes.Algo
                                 crateCopy[index] = GridController.GetNextPosition(playerPos, current.BestAction, out _);
                         }
                     }
-                    stateToCheck = grid.GetState(states,playerPos, crateCopy);
+
+                    stateToCheck = grid.GetState(states, playerPos, crateCopy);
                 }
 
                 ++loopCount;
             } while (loopCount < 10000);
         }
-        
-  
     }
-    
-    
-   
-
 }

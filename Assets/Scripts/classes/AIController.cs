@@ -33,7 +33,7 @@ namespace classes
                 for (int x = 0; x < grid.GridSize.x; x++)
                 {
                     Vector2Int playerPos = new Vector2Int(x, y);
-                    switch ((GridType) grid.GetTile(playerPos))
+                    switch ((GridType)grid.GetTile(playerPos))
                     {
                         case GridType.Door:
                             possiblesStates.Add(new State(GridType.Door, playerPos)
@@ -119,7 +119,7 @@ namespace classes
                 for (int x = 0; x < grid.GridSize.x; x++)
                 {
                     Vector2Int playerPos = new Vector2Int(x, y);
-                    if ((GridType) grid.GetTile(playerPos) != GridType.Wall)
+                    if ((GridType)grid.GetTile(playerPos) != GridType.Wall)
                     {
                         List<Vector2Int> cratePos = new List<Vector2Int>();
                         State newState = new State(GridType.Ground, playerPos, cratePos,
@@ -136,7 +136,7 @@ namespace classes
                 case ReinforcementType.Policy:
                     dp = new PolicyIteration(possiblesStates, grid.GridSize.x);
                     dp.Evaluate(grid, 0.9f, 0.01f);
-                    dp.ComputeSokoban(grid.PlayerPosition, grid.CratesPositions);
+                    dp.Compute(grid.PlayerPosition, grid.CratesPositions);
                     break;
                     // case ReinforcementType.Sarsra:
                     //     break;
@@ -151,7 +151,7 @@ namespace classes
                 default:
                     dp = new ValueIteration(possiblesStates, grid.GridSize.x);
                     dp.Evaluate(grid, 0.9f, 0.01f);
-                    dp.ComputeSokoban(grid.PlayerPosition, grid.CratesPositions);
+                    dp.Compute(grid.PlayerPosition, grid.CratesPositions);
                     break;
             }
 
@@ -160,7 +160,7 @@ namespace classes
                 States = dp.states;
                 Actions = dp.Actions;
             }
-            
+
             this.End = DateTime.Now;
             this.Span = End - Start;
         }
@@ -178,7 +178,7 @@ namespace classes
                     for (int x = 0; x < grid.GridSize.x; x++)
                     {
                         Vector2Int currentPos = new Vector2Int(x, y);
-                        GridType type = (GridType) grid.GetTile(currentPos);
+                        GridType type = (GridType)grid.GetTile(currentPos);
                         if (type != GridType.Wall && state.PlayerInformation != currentPos)
                         {
                             crateFound = false;
@@ -198,7 +198,7 @@ namespace classes
                                 State newState = new State(type, state.PlayerInformation, copyCrate,
                                     grid.GetActionFromPosition(state.PlayerInformation));
 
-                                if (grid.CheckCrateCondition(grid.pointsPosition, copyCrate))
+                                if (grid.CheckCrateCondition(copyCrate))
                                 {
                                     newState.Reward = 1;
                                 }
@@ -206,7 +206,6 @@ namespace classes
                                 {
                                     newState.Reward = 0;
                                 }
-
 
                                 possibleCrateStates.Add(newState);
                             }

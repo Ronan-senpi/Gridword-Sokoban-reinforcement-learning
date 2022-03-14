@@ -6,9 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="153189f3-f843-44a8-af03-e20bf390d13f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.reinforcement-learning/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.reinforcement-learning/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AIManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/AIManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/classes/GridController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/classes/GridController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Editor/DebugManagerEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/DebugManagerEditor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Editor/StatsManagerEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Editor/StatsManagerEditor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/StatsManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/StatsManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/classes/Stats.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/classes/Stats.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +86,7 @@
       <workItem from="1645017880241" duration="6003000" />
       <workItem from="1645024759915" duration="7102000" />
       <workItem from="1645083736990" duration="21844000" />
-      <workItem from="1647244075862" duration="370000" />
+      <workItem from="1647244075862" duration="3246000" />
     </task>
     <servers />
   </component>

@@ -3,11 +3,12 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(AIManager))]
-class DebugManagerEditor : Editor {
-    public override void OnInspectorGUI() {
-        
+class DebugManagerEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
         base.OnInspectorGUI();
-        
+
         if (!Application.isPlaying)
         {
             GUILayout.Label("More options in play mode");
@@ -19,8 +20,9 @@ class DebugManagerEditor : Editor {
             GUILayout.Label("More options when a level is loaded");
             return;
         }
+
         AIManager ai = (AIManager) target;
-        
+
         if (GUILayout.Button("Compute AI"))
         {
             AIManager.Instance.AIStart();
@@ -31,7 +33,7 @@ class DebugManagerEditor : Editor {
         {
             ai.NbEpisode = EditorGUILayout.IntSlider("Number of episodes", ai.NbEpisode, 1, 9999);
         }
-        
+
         GUILayout.Label("(More options show up when compute is over)");
         if (ai.ComputeIsOver)
         {

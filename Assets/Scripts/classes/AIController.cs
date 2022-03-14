@@ -110,6 +110,7 @@ namespace classes
 
         public void RunSokoban(GridController grid, ReinforcementType? type = null)
         {
+            this.Start = DateTime.Now;
             this.grid = grid;
             this.GridSize = grid.GridSize;
             List<State> possiblesStates = new List<State>();
@@ -159,6 +160,9 @@ namespace classes
                 States = dp.states;
                 Actions = dp.Actions;
             }
+            
+            this.End = DateTime.Now;
+            this.Span = End - Start;
         }
 
         public List<State> GenerateCrateStates(List<State> currentStates, GridController grid, int crateNeeded)

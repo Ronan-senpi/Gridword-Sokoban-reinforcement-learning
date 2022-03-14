@@ -6,8 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="153189f3-f843-44a8-af03-e20bf390d13f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.reinforcement-learning/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.reinforcement-learning/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Sokoban.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Sokoban.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/LevelManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/LevelManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/classes/AIController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/classes/AIController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/UserSettings/EditorUserSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,6 +87,8 @@
       <workItem from="1645024759915" duration="7102000" />
       <workItem from="1645083736990" duration="21844000" />
       <workItem from="1647244075862" duration="5684000" />
+      <workItem from="1647264404119" duration="1664000" />
+      <workItem from="1647268188212" duration="1739000" />
     </task>
     <servers />
   </component>

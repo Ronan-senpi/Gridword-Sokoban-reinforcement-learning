@@ -22,11 +22,24 @@ public class State
         StateValue = 0;
         Actions = actions;
         Reward = 0;
-        BestAction = Direction.Stay;
+        BestAction = Direction.Down;
     }
     
     public float GetReward()
     {
         return this.Reward;
+    }
+
+    public bool Victory(GridController grid)
+    {
+        if (GameType.Instance.IsSokoban)
+        {
+            return grid.CompareTwoListOfVector2(grid.pointsPosition, CratesInformation);
+        }
+        else
+        {
+            return CellType == GridType.Door;
+
+        }
     }
 }

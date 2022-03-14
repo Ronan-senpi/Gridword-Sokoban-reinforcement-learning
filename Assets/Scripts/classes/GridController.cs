@@ -166,7 +166,7 @@ namespace classes
         /// <param name="currentCell">Cell where we can found crate</param>
         /// <param name="direction">Direction of movement</param>
         /// <returns>True if can move crate and movement successed</returns>
-        private bool CanMoveCrate(Vector2Int currentCell, Vector2Int direction)
+        public bool CanMoveCrate(Vector2Int currentCell, Vector2Int direction)
         {
             Vector2Int crate = cratesPositions.FirstOrDefault(x => x.x == currentCell.x && x.y == currentCell.y);
             if (crate == null)
@@ -275,7 +275,13 @@ namespace classes
             return pos + dirVec;
         }
 
-
+        public State GetState(List<State> states, Vector2Int playerPos, List<Vector2Int> cratePos)
+        {
+            return states.FirstOrDefault(state => state.PlayerInformation == playerPos && CompareTwoListOfVector2(cratePos, state.CratesInformation));
+        }
+        
+        
+        
         public State GetNextState(State currentState, Direction dir, List<State> possibleStates)
         {
             Vector2Int playerNextPos = GetNextPosition(currentState.PlayerInformation, dir, out Vector2Int dirVec);

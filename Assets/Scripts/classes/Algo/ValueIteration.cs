@@ -14,6 +14,7 @@ namespace classes.Algo
 
         public override void Evaluate(GridController grid, float gamma = 0.9f, float theta = 0.01f)
         {
+            this.grid = grid;
             delta = 0f;
             maxLoop = 0;
             do

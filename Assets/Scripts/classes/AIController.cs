@@ -135,7 +135,7 @@ namespace classes
                 case ReinforcementType.Policy:
                     dp = new PolicyIteration(possiblesStates, grid.GridSize.x);
                     dp.Evaluate(grid, 0.9f, 0.01f);
-                    dp.Compute(grid.PlayerPosition);
+                    dp.ComputeSokoban(grid.PlayerPosition, grid.CratesPositions);
                     break;
                     // case ReinforcementType.Sarsra:
                     //     break;
@@ -150,7 +150,7 @@ namespace classes
                 default:
                     dp = new ValueIteration(possiblesStates, grid.GridSize.x);
                     dp.Evaluate(grid, 0.9f, 0.01f);
-                    dp.Compute(grid.PlayerPosition);
+                    dp.ComputeSokoban(grid.PlayerPosition, grid.CratesPositions);
                     break;
             }
 

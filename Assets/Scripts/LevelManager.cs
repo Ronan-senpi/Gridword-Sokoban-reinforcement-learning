@@ -13,9 +13,8 @@ public class LevelManager : MonoBehaviour
     {
         return LevelIndex;
     }
-    [Header("WARNING !! Edit size of any list can break the game!")] 
-    
-    [SerializeField]
+
+    [Header("WARNING !! Edit size of any list can break the game!")] [SerializeField]
     private List<LevelInfos> levels = new List<LevelInfos>();
 
     public static LevelManager Instance { get; set; }
@@ -39,20 +38,22 @@ public class LevelManager : MonoBehaviour
                         1, 1, 1, 2, 1,
                     },
                     new Vector2Int(5, 1),
-                    new List<Vector2Int>() { new Vector2Int(2, 0) }),
+                    new List<Vector2Int>() {new Vector2Int(2, 0)}),
 
-                new LevelInfos(new Vector2Int(0, 0),
+                new LevelInfos(new Vector2Int(1, 1),
                     new List<int>()
                     {
-                        1, 1, 1, 2, 1,
-                        1, 1, 1, 1, 1,
-                        1, 1, 1, 1, 1,
+                        1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1, 1, 1, 1, 1,
+                        1, 1, 1, 2, 1, 1, 1,
                     },
-                    new Vector2Int(5, 3),
+                    new Vector2Int(7, 5),
                     new List<Vector2Int>()
                     {
-                      //  new Vector2Int(2, 0),
-                        new Vector2Int(2, 1)
+                        //  new Vector2Int(2, 0),
+                        new Vector2Int(1, 2)
                     })
             };
         }
